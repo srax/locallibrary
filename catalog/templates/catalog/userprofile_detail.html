@@ -1,0 +1,56 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h1>User Profile: {{ userprofile.user.username }}</h1>
+
+  <div class="row">
+    <div class="col-md-3">
+      {% if userprofile.avatar %}
+        <img src="{{ userprofile.avatar }}" class="img-fluid" alt="Avatar">
+      {% else %}
+        <div class="bg-secondary text-white p-5 text-center">No Avatar</div>
+      {% endif %}
+    </div>
+    <div class="col-md-9">
+      <p><strong>Bio:</strong> {{ userprofile.bio|default:"No bio provided" }}</p>
+      <p><strong>Location:</strong> {{ userprofile.location|default:"Not specified" }}</p>
+      {% if userprofile.website %}
+        <p><strong>Website:</strong> <a href="{{ userprofile.website }}" target="_blank">{{ userprofile.website }}</a></p>
+      {% endif %}
+      <p><strong>Joined:</strong> {{ userprofile.joined_date }}</p>
+      <p><strong>Total Posts:</strong> {{ userprofile.post_count }}</p>
+      <p><strong>Total Threads:</strong> {{ userprofile.thread_count }}</p>
+    </div>
+  </div>
+
+  <hr>
+
+  <h4>Recent Threads by {{ userprofile.user.username }}</h4>
+  {% if userprofile.user.threads.all %}
+    <ul>
+      {% for thread in userprofile.user.threads.all|slice:":5" %}
+        <li>
+          <a href="{{ thread.get_absolute_url }}">{{ thread.title }}</a> 
+          in <a href="{{ thread.category.get_absolute_url }}">{{ thread.category.name }}</a>
+          - {{ thread.created_date }}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No threads created yet.</p>
+  {% endif %}
+
+  <h4>Recent Posts by {{ userprofile.user.username }}</h4>
+  {% if userprofile.user.posts.all %}
+    <ul>
+      {% for post in userprofile.user.posts.all|slice:":5" %}
+        <li>
+          Post in <a href="{{ post.thread.get_absolute_url }}">{{ post.thread.title }}</a>
+          - {{ post.created_date }}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No posts yet.</p>
+  {% endif %}
+{% endblock %}

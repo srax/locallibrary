@@ -1,0 +1,28 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h1>{{ category.name }}</h1>
+
+  <p><strong>Description:</strong> {{ category.description }}</p>
+  <p><strong>Created:</strong> {{ category.created_date }}</p>
+
+  <div style="margin-left:20px;margin-top:20px">
+    <h4>Threads in this category:</h4>
+
+    {% if category.thread_set.all %}
+      <ul>
+      {% for thread in category.thread_set.all %}
+        <li>
+          <a href="{{ thread.get_absolute_url }}">{{ thread.title }}</a>
+          {% if thread.is_pinned %}<span class="badge bg-warning">Pinned</span>{% endif %}
+          {% if thread.is_locked %}<span class="badge bg-secondary">Locked</span>{% endif %}
+          <br>
+          <small>by {{ thread.author.username }} - {{ thread.created_date }} - {{ thread.post_count }} posts - {{ thread.views }} views</small>
+        </li>
+      {% endfor %}
+      </ul>
+    {% else %}
+      <p>No threads in this category yet.</p>
+    {% endif %}
+  </div>
+{% endblock %}

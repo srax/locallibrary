@@ -1,0 +1,30 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h1>Forum Home</h1>
+  <p>
+    Welcome to our Forum! A place for discussions and community engagement.
+  </p>
+  <h2>Forum Statistics</h2>
+  <p>The forum has the following statistics:</p>
+  <ul>
+    <li><strong>Categories:</strong> {{ num_categories }}</li>
+    <li><strong>Threads:</strong> {{ num_threads }}</li>
+    <li><strong>Posts:</strong> {{ num_posts }}</li>
+    <li><strong>Users:</strong> {{ num_users }}</li>
+  </ul>
+  
+  <h2>Recent Threads</h2>
+  {% if recent_threads %}
+  <ul>
+    {% for thread in recent_threads %}
+      <li>
+        <a href="{{ thread.get_absolute_url }}">{{ thread.title }}</a>
+        - by {{ thread.author.username }} in <strong>{{ thread.category.name }}</strong>
+      </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+    <p>No threads yet. Be the first to start a discussion!</p>
+  {% endif %}
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h1>{{ thread.title }}</h1>
+
+  <p>
+    <strong>Category:</strong> <a href="{{ thread.category.get_absolute_url }}">{{ thread.category.name }}</a><br>
+    <strong>Author:</strong> {{ thread.author.username }}<br>
+    <strong>Created:</strong> {{ thread.created_date }}<br>
+    <strong>Last Updated:</strong> {{ thread.updated_date }}<br>
+    <strong>Views:</strong> {{ thread.views }}<br>
+    {% if thread.is_pinned %}<span class="badge bg-warning">Pinned</span>{% endif %}
+    {% if thread.is_locked %}<span class="badge bg-secondary">Locked</span>{% endif %}
+  </p>
+
+  <hr>
+
+  <h4>Posts in this thread:</h4>
+  <div style="margin-left:20px;margin-top:20px">
+    {% if thread.post_set.all %}
+      {% for post in thread.post_set.all %}
+        <div class="card mb-3">
+          <div class="card-header">
+            <strong>{{ post.author.username }}</strong> - {{ post.created_date }}
+            {% if post.is_edited %}<em>(edited)</em>{% endif %}
+          </div>
+          <div class="card-body">
+            <p class="card-text">{{ post.content }}</p>
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p>No posts yet. Be the first to post!</p>
+    {% endif %}
+  </div>
+{% endblock %}

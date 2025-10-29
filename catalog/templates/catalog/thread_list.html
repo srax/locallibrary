@@ -1,0 +1,26 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h1>All Threads</h1>
+  {% if thread_list %}
+  <ul>
+    {% for thread in thread_list %}
+      <li>
+        <a href="{{ thread.get_absolute_url }}"><strong>{{ thread.title }}</strong></a>
+        {% if thread.is_pinned %}<span class="badge bg-warning">Pinned</span>{% endif %}
+        {% if thread.is_locked %}<span class="badge bg-secondary">Locked</span>{% endif %}
+        <br>
+        <small>
+          Category: <a href="{{ thread.category.get_absolute_url }}">{{ thread.category.name }}</a> |
+          Author: {{ thread.author.username }} |
+          Created: {{ thread.created_date }} |
+          Posts: {{ thread.post_count }} |
+          Views: {{ thread.views }}
+        </small>
+      </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+    <p>There are no threads in the forum.</p>
+  {% endif %}
+{% endblock %}

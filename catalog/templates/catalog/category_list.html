@@ -1,0 +1,18 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h1>Forum Categories</h1>
+  {% if category_list %}
+  <ul>
+    {% for category in category_list %}
+      <li>
+        <a href="{{ category.get_absolute_url }}"><strong>{{ category.name }}</strong></a>
+        <p>{{ category.description }}</p>
+        <small>Threads: {{ category.thread_count }}</small>
+      </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+    <p>There are no categories in the forum.</p>
+  {% endif %}
+{% endblock %}
