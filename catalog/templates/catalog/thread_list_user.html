@@ -1,0 +1,20 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+    <h1>My Threads</h1>
+
+    {% if thread_list %}
+    <ul>
+      {% for thread in thread_list %}
+      <li>
+        <a href="{% url 'thread-detail' thread.pk %}">{{ thread.title }}</a>
+        ({{ thread.category }}) - Created: {{ thread.created_date|date:"M d, Y" }}
+        - Posts: {{ thread.post_count }} - Views: {{ thread.views }}
+      </li>
+      {% endfor %}
+    </ul>
+
+    {% else %}
+      <p>You haven't created any threads yet.</p>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+    <h1>All Threads (Moderator View)</h1>
+
+    {% if thread_list %}
+    <ul>
+      {% for thread in thread_list %}
+      <li>
+        <a href="{% url 'thread-detail' thread.pk %}">{{ thread.title }}</a>
+        by <strong>{{ thread.author }}</strong>
+        ({{ thread.category }}) - Created: {{ thread.created_date|date:"M d, Y" }}
+        - Posts: {{ thread.post_count }} - Views: {{ thread.views }}
+        {% if thread.is_pinned %}<span class="badge bg-warning">Pinned</span>{% endif %}
+        {% if thread.is_locked %}<span class="badge bg-danger">Locked</span>{% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+
+    {% else %}
+      <p>There are no threads in the forum yet.</p>
+    {% endif %}
+{% endblock %}

@@ -8,4 +8,6 @@ urlpatterns = [
     path('threads/', views.ThreadListView.as_view(), name='threads'),
     path('thread/<int:pk>', views.ThreadDetailView.as_view(), name='thread-detail'),
     path('profile/<int:pk>', views.UserProfileDetailView.as_view(), name='profile-detail'),
+    path('mythreads/', views.MyThreadsListView.as_view(), name='my-threads'),
+    path('moderator/threads/', views.AllThreadsByUserListView.as_view(), name='all-threads-moderator'),
 ]

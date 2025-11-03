@@ -56,6 +56,7 @@ class Thread(models.Model):
 
     class Meta:
         ordering = ['-is_pinned', '-updated_date']
+        permissions = (("can_moderate_thread", "Can view all threads and moderate"),)
 
     def __str__(self):
         """String for representing the Model object."""

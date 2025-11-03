@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.views import generic
 from django.contrib.auth.models import User
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
 # Create your views here.
 
@@ -60,3 +61,24 @@ class ThreadDetailView(generic.DetailView):
 class UserProfileDetailView(generic.DetailView):
     model = UserProfile
     template_name = 'catalog/userprofile_detail.html'
+
+
+class MyThreadsListView(LoginRequiredMixin, generic.ListView):
+    """Generic class-based view listing threads created by current user."""
+    model = Thread
+    template_name = 'catalog/thread_list_user.html'
+    paginate_by = 10
+
+    def get_queryset(self):
+        return Thread.objects.filter(author=self.request.user).order_by('-created_date')
+
+
+class AllThreadsByUserListView(PermissionRequiredMixin, generic.ListView):
+    """Generic class-based view listing all threads with authors - for moderators only."""
+    model = Thread
+    permission_required = 'catalog.can_moderate_thread'
+    template_name = 'catalog/thread_list_all_moderator.html'
+    paginate_by = 20
+
+    def get_queryset(self):
+        return Thread.objects.all().order_by('-created_date')
