@@ -26,7 +26,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-g0sm2%+-kjd*)2t1$k9db
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = ['https:/wearethebest.up.railway.app' '*']  # Railway will provide the domain via environment
+ALLOWED_HOSTS = ['wearethebest.up.railway.app' '*']  # Railway will provide the domain via environment
 
 
 # Application definition
