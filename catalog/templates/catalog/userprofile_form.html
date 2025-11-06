@@ -1,0 +1,12 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h1>Edit profile: {{ object.user.username }}</h1>
+
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Save changes</button>
+    <a href="{% url 'profile-detail' object.pk %}" class="btn btn-secondary">Cancel</a>
+  </form>
+{% endblock %}

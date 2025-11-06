@@ -2,6 +2,11 @@
 
 {% block content %}
   <h1>Forum Home</h1>
+  {% if user.is_authenticated %}
+    <p>
+ 
+    </p>
+  {% endif %}
   <p>
     Welcome to our Forum! A place for discussions and community engagement.
   </p>
@@ -27,4 +32,6 @@
   {% else %}
     <p>No threads yet. Be the first to start a discussion!</p>
   {% endif %}
+  
+  {# World clock moved to base template so it appears on every page. #}
 {% endblock %}

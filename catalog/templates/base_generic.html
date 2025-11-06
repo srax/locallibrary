@@ -15,27 +15,159 @@
 </head>
 
 <body>
+  {# Global world clock widget placed here so it appears on every page. #}
+  <div id="world-clock" aria-live="polite" style="position:fixed;top:1rem;right:1rem;background:rgba(255,255,255,0.9);padding:0.35rem 0.6rem;border-radius:6px;box-shadow:0 2px 6px rgba(0,0,0,0.12);font-family:monospace;font-weight:600;z-index:9999">Loading clock…</div>
+
+  <script>
+  (function(){
+    const clockEl = document.getElementById('world-clock');
+    const apiUrl = 'https://worldtimeapi.org/api/ip'; // returns time for client's IP
+    let offset = 0; // server_ms - local_ms
+    let tzAbbrev = '';
+    const resyncMs = 5 * 60 * 1000; // resync every 5 minutes
+    let tickTimer = null;
+    // retry logic for when the API is temporarily unavailable
+    let retryDelay = 5000; // start with 5s
+    const retryMax = 5 * 60 * 1000; // cap at 5 minutes
+    let retryHandle = null;
+
+    function pad(n){ return String(n).padStart(2,'0'); }
+    function formatTime(d){
+      return pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
+    }
+
+    function updateDisplay(){
+      const now = new Date(Date.now() + offset);
+      clockEl.textContent = formatTime(now) + (tzAbbrev ? ' ' + tzAbbrev : '');
+    }
+
+    function startTicking(){
+      if (tickTimer) clearInterval(tickTimer);
+      // align to next full second
+      const nowMs = Date.now();
+      const delay = 1000 - (nowMs % 1000);
+      setTimeout(function(){
+        updateDisplay();
+        tickTimer = setInterval(updateDisplay, 1000);
+      }, delay);
+    }
+
+    // Improved retry scheduler with a short-circuit fallback mode.
+    let failedAttempts = 0;
+    let fallbackMode = false; // when true, show local time but keep retrying in background
+
+    function scheduleRetry(){
+      // if already scheduled, do nothing
+      if (retryHandle) return;
+      // show connecting only when not in fallback mode
+      if (!fallbackMode) clockEl.textContent = 'Connecting...';
+      retryHandle = setTimeout(function(){
+        retryHandle = null;
+        // attempt to sync again
+        syncTime();
+        // exponential backoff
+        retryDelay = Math.min(retryDelay * 2, retryMax);
+      }, retryDelay);
+    }
+
+    function syncTime(){
+      // Abort fetch if it takes too long to avoid hanging on connection resets
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 5000);
+
+      fetch(apiUrl, {cache: 'no-store', signal: controller.signal})
+        .then(function(resp){
+          clearTimeout(timeout);
+          if(!resp.ok) throw new Error('Network response not ok');
+          return resp.json();
+        })
+        .then(function(data){
+          // data.datetime is ISO string
+          const serverMs = Date.parse(data.datetime);
+          if (Number.isFinite(serverMs)){
+            offset = serverMs - Date.now();
+            tzAbbrev = data.abbreviation || data.timezone || '';
+            // successful sync: clear any pending retries and reset backoff
+            if (retryHandle) { clearTimeout(retryHandle); retryHandle = null; }
+            retryDelay = 5000;
+            failedAttempts = 0;
+            fallbackMode = false;
+            updateDisplay();
+            startTicking();
+          } else {
+            // bad payload
+            failedAttempts++;
+            maybeEnterFallback();
+            scheduleRetry();
+          }
+        })
+        .catch(function(err){
+          // handle aborted requests and connection resets gracefully
+          failedAttempts++;
+          // If the failures are persistent, switch to fallback: show local clock
+          maybeEnterFallback();
+          scheduleRetry();
+        });
+    }
+
+    function maybeEnterFallback(){
+      // After several failures, stop blocking UI with 'Connecting...' and
+      // show local time (best-effort) while continuing to retry in background.
+      if (failedAttempts >= 4 && !fallbackMode){
+        fallbackMode = true;
+        // display local time immediately and start ticking locally
+        updateDisplay();
+        if (tickTimer) { clearInterval(tickTimer); }
+        // tick using local Date but continue to attempt resyncs
+        tickTimer = setInterval(function(){
+          const now = new Date();
+          clockEl.textContent = formatTime(now) + (tzAbbrev ? ' ' + tzAbbrev : '');
+        }, 1000);
+        // widen the resync interval to reduce load when remote is flaky
+        if (typeof resyncHandle !== 'undefined') clearInterval(resyncHandle);
+        // try resync less often in fallback (10 minutes)
+        setInterval(syncTime, 10 * 60 * 1000);
+      }
+    }
+
+    // initial sync
+    syncTime();
+
+    // periodic resync to correct drift
+    const resyncHandle = setInterval(syncTime, resyncMs);
+
+    // when page becomes visible again, resync immediately
+    document.addEventListener('visibilitychange', function(){ if(document.visibilityState === 'visible') syncTime(); });
+
+    // cleanup if needed when unloading
+    window.addEventListener('beforeunload', function(){ if(tickTimer) clearInterval(tickTimer); clearInterval(resyncHandle); });
+  })();
+  </script>
   <div class="container-fluid">
     <div class="row">
       <div class="col-sm-2">
         {% block sidebar %}
         <ul class="sidebar-nav">
           …
-   {% if user.is_authenticated %}
-     <li>User: {{ user.get_username }}</li>
-     <li>
-       <form id="logout-form" method="post" action="{% url 'logout' %}">
-         {% csrf_token %}
-         <button type="submit" class="btn btn-link">Logout</button>
-       </form>
-     </li>
-   {% else %}
-     <li><a href="{% url 'login' %}?next={{ request.path }}">Login</a></li>
-   {% endif %}
-    …
+          {% if user.is_authenticated %}
+          <li>User: <a href="{{ user.get_absolute_url }}">{{ user.get_username }}</a></li>
+          <li>
+            <form id="logout-form" method="post" action="{% url 'logout' %}">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-link">Logout</button>
+            </form>
+          </li>
+          {% else %}
+          <li><a href="{% url 'login' %}?next={{ request.path }}">Login</a></li>
+          {% endif %}
+          …
           <li><a href="{% url 'index' %}">Home</a></li>
           <li><a href="{% url 'categories' %}">All categories</a></li>
           <li><a href="{% url 'threads' %}">All threads</a></li>
+          {% if user.is_staff %}
+          <li><a href="/admin/">Admin</a></li>
+          <li><a href="/catalog/users">Users</a></li>
+          {% endif %}
         </ul>
         {% endblock %}
       </div>

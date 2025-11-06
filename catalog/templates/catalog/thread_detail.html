@@ -5,7 +5,7 @@
 
   <p>
     <strong>Category:</strong> <a href="{{ thread.category.get_absolute_url }}">{{ thread.category.name }}</a><br>
-    <strong>Author:</strong> {{ thread.author.username }}<br>
+    <strong>Author:</strong> <a href="{{ thread.author.get_absolute_url }}">{{ thread.author.username }}</a><br>
     <strong>Created:</strong> {{ thread.created_date }}<br>
     <strong>Last Updated:</strong> {{ thread.updated_date }}<br>
     <strong>Views:</strong> {{ thread.views }}<br>

@@ -115,3 +115,19 @@ class UserProfile(models.Model):
     def thread_count(self):
         """Returns the number of threads created by this user."""
         return self.user.threads.count()
+
+
+# Add a convenient get_absolute_url on the built-in User model so templates
+# can call `user.get_absolute_url()` and be routed to the corresponding
+# `UserProfile` detail page. If a profile doesn't exist, fall back to the
+# users list view.
+def _user_get_absolute_url(self):
+    try:
+        return reverse('profile-detail', args=[str(self.profile.id)])
+    except Exception:
+        # If the user has no profile (or reverse fails), fallback to users list
+        return reverse('users')
+
+
+# Attach the helper to the auth User model
+User.add_to_class('get_absolute_url', _user_get_absolute_url)

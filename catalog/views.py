@@ -1,6 +1,12 @@
 from django.shortcuts import render
 from django.views import generic
 from django.contrib.auth.models import User
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.urls import reverse_lazy
+from django.http import JsonResponse, HttpResponseServerError
+from django.core.cache import cache
+import urllib.request, urllib.error, json
+from datetime import datetime
 
 # Create your views here.
 
@@ -60,3 +66,79 @@ class ThreadDetailView(generic.DetailView):
 class UserProfileDetailView(generic.DetailView):
     model = UserProfile
     template_name = 'catalog/userprofile_detail.html'
+    context_object_name = 'userprofile'
+
+
+class UserProfileUpdateView(LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView):
+    """Allow a user to edit their own profile."""
+    model = UserProfile
+    fields = ['bio', 'location', 'website', 'avatar']
+    template_name = 'catalog/userprofile_form.html'
+
+    def get_success_url(self):
+        return reverse_lazy('profile-detail', kwargs={'pk': self.object.pk})
+
+    def test_func(self):
+        # Only allow the owner of the profile or staff to edit
+        user = self.request.user
+        obj = self.get_object()
+        return bool(user and (user.is_staff or obj.user == user))
+
+
+def time_proxy(request):
+    """Proxy endpoint for the worldtime API with simple caching.
+
+    Clients should call this endpoint instead of the external API to avoid
+    CORS/rate-limit/connectivity issues. We cache successful responses for
+    a short time to reduce outbound calls.
+    """
+    cache_key = 'worldtimeapi:latest'
+    data = cache.get(cache_key)
+    if data:
+        return JsonResponse(data)
+
+    try:
+        with urllib.request.urlopen('https://worldtimeapi.org/api/ip', timeout=5) as resp:
+            body = resp.read()
+            payload = json.loads(body.decode())
+            result = {
+                'datetime': payload.get('datetime'),
+                'abbreviation': payload.get('abbreviation'),
+                'timezone': payload.get('timezone'),
+            }
+            # cache for 60 seconds
+            cache.set(cache_key, result, 60)
+            return JsonResponse(result)
+    except Exception:
+        # On failure, fall back to server UTC time so clients can keep working.
+        fallback = {
+            'datetime': datetime.now(datetime.timezone.utc).isoformat() + 'Z',
+            'abbreviation': 'UTC',
+            'timezone': 'UTC',
+            'fallback': True,
+        }
+        return JsonResponse(fallback, status=200)
+
+
+class UserListView(LoginRequiredMixin, UserPassesTestMixin, generic.ListView):
+    """Simple list view for Django users.
+
+    Provides a paginated list of users. Template should be placed at
+    `catalog/user_list.html` if customized.
+    """
+    model = User
+    template_name = 'catalog/user_list.html'
+    paginate_by = 1
+    # When the test fails, redirect to the login page instead of raising 403
+    # (AccessMixin.handle_no_permission will redirect to login when raise_exception is False)
+    raise_exception = False
+
+    def test_func(self):
+        # Only allow staff or superuser to view the users list
+        user = self.request.user
+        return bool(user and (user.is_staff or user.is_superuser))
+
+class UserDetailView(generic.DetailView):
+    model = User
+    template_name = 'catalog/userprofile_detail.html'
+

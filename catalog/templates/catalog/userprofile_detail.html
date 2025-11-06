@@ -1,7 +1,13 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-  <h1>User Profile: {{ userprofile.user.username }}</h1>
+  <h1>User Profile: {{ userprofile.user.username }}
+    {% if request.user.is_authenticated %}
+      {% if request.user == userprofile.user or request.user.is_staff %}
+      &nbsp;<a href="{% url 'profile-edit' userprofile.pk %}" style="text-decoration: none;">[edit]</a>
+      {% endif %}
+    {% endif %}
+  </h1>
 
   <div class="row">
     <div class="col-md-3">
