@@ -1,3 +1,4 @@
+from asyncio.log import logger
 from django.shortcuts import render
 from django.views import generic
 from django.contrib.auth.models import User
@@ -7,6 +8,7 @@ from django.http import JsonResponse, HttpResponseServerError
 from django.core.cache import cache
 import urllib.request, urllib.error, json
 from datetime import datetime
+import os
 
 # Create your views here.
 
@@ -86,36 +88,68 @@ class UserProfileUpdateView(LoginRequiredMixin, UserPassesTestMixin, generic.Upd
 
 
 def time_proxy(request):
-    """Proxy endpoint for the worldtime API with simple caching.
+    """Proxy endpoint for the TimezoneDB API.
 
     Clients should call this endpoint instead of the external API to avoid
-    CORS/rate-limit/connectivity issues. We cache successful responses for
-    a short time to reduce outbound calls.
+    CORS/rate-limit/connectivity issues.
+    
+    Uses TimezoneDB API to get timezone information based on coordinates or zone name.
+    If no parameters provided, defaults to UTC timezone.
     """
-    cache_key = 'worldtimeapi:latest'
-    data = cache.get(cache_key)
-    if data:
-        return JsonResponse(data)
+    # Get optional query parameters for timezone lookup
+    zone = request.GET.get('zone', 'UTC')  # e.g., 'America/New_York'
+    lat = request.GET.get('lat')
+    lng = request.GET.get('lng')
 
     try:
-        with urllib.request.urlopen('https://worldtimeapi.org/api/ip', timeout=5) as resp:
+        # Build API URL based on parameters
+        api_key = os.environ.get('TIMEZONEDB_API_KEY')
+        if not api_key:
+            raise Exception("TIMEZONEDB_API_KEY environment variable not set")
+        
+        base_url = 'http://api.timezonedb.com/v2.1/get-time-zone'
+        
+        if lat and lng:
+            # Get timezone by coordinates
+            api_url = f'{base_url}?key={api_key}&format=json&by=position&lat={lat}&lng={lng}'
+        else:
+            # Get timezone by zone name
+            api_url = f'{base_url}?key={api_key}&format=json&by=zone&zone={zone}'
+        
+        with urllib.request.urlopen(api_url, timeout=5) as resp:
             body = resp.read()
             payload = json.loads(body.decode())
+            
+            # Check if API request was successful
+            if payload.get('status') != 'OK':
+                raise Exception(f"TimezoneDB API error: {payload.get('message', 'Unknown error')}")
+            
+            # Format the response to match expected structure
             result = {
-                'datetime': payload.get('datetime'),
-                'abbreviation': payload.get('abbreviation'),
-                'timezone': payload.get('timezone'),
+                'datetime': payload.get('formatted'),  # Pre-formatted datetime string
+                'timestamp': payload.get('timestamp'),  # Unix timestamp
+                'timezone': payload.get('zoneName'),
+                'abbreviation': "EST",
+                'gmtOffset': payload.get('gmtOffset'),  # Offset from GMT in seconds
+                'dst': payload.get('dst'),  # Whether DST is active (0 or 1)
+                'zoneStart': payload.get('zoneStart'),  # Unix timestamp of zone start
+                'zoneEnd': payload.get('zoneEnd'),  # Unix timestamp of zone end
+                'countryCode': payload.get('countryCode'),
+                'countryName': payload.get('countryName'),
             }
-            # cache for 60 seconds
-            cache.set(cache_key, result, 60)
+            
             return JsonResponse(result)
-    except Exception:
+    except Exception as e:
         # On failure, fall back to server UTC time so clients can keep working.
         fallback = {
-            'datetime': datetime.now(datetime.timezone.utc).isoformat() + 'Z',
+            'datetime': datetime.now(datetime.timezone.utc).strftime('%Y-%m-%d %H:%M:%S'),
+            'timestamp': int(datetime.now(datetime.timezone.utc).timestamp()),
             'abbreviation': 'UTC',
             'timezone': 'UTC',
+            'gmtOffset': 0,
+            'dst': 0,
             'fallback': True,
+            'error': str(e),
         }
         return JsonResponse(fallback, status=200)
 

@@ -21,10 +21,9 @@
   <script>
   (function(){
     const clockEl = document.getElementById('world-clock');
-    const apiUrl = 'https://worldtimeapi.org/api/ip'; // returns time for client's IP
+    const apiUrl = '/catalog/api/time/'; // Use Django proxy endpoint for TimezoneDB API
     let offset = 0; // server_ms - local_ms
     let tzAbbrev = '';
-    const resyncMs = 5 * 60 * 1000; // resync every 5 minutes
     let tickTimer = null;
     // retry logic for when the API is temporarily unavailable
     let retryDelay = 5000; // start with 5s
@@ -32,8 +31,15 @@
     let retryHandle = null;
 
     function pad(n){ return String(n).padStart(2,'0'); }
+    
     function formatTime(d){
-      return pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
+      let hours = d.getHours();
+      const minutes = d.getMinutes();
+      const seconds = d.getSeconds();
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      hours = hours % 12;
+      hours = hours ? hours : 12; // the hour '0' should be '12'
+      return hours + ':' + pad(minutes) + ':' + pad(seconds) + ' ' + ampm;
     }
 
     function updateDisplay(){
@@ -43,18 +49,15 @@
 
     function startTicking(){
       if (tickTimer) clearInterval(tickTimer);
-      // align to next full second
-      const nowMs = Date.now();
-      const delay = 1000 - (nowMs % 1000);
-      setTimeout(function(){
-        updateDisplay();
-        tickTimer = setInterval(updateDisplay, 1000);
-      }, delay);
+      // Update display immediately first
+      updateDisplay();
+      // Then set up interval to update every second
+      tickTimer = setInterval(updateDisplay, 1000);
     }
 
     // Improved retry scheduler with a short-circuit fallback mode.
     let failedAttempts = 0;
-    let fallbackMode = false; // when true, show local time but keep retrying in background
+    let fallbackMode = false; // when true, show error message
 
     function scheduleRetry(){
       // if already scheduled, do nothing
@@ -64,13 +67,13 @@
       retryHandle = setTimeout(function(){
         retryHandle = null;
         // attempt to sync again
-        syncTime();
+        fetchTime();
         // exponential backoff
         retryDelay = Math.min(retryDelay * 2, retryMax);
       }, retryDelay);
     }
 
-    function syncTime(){
+    function fetchTime(){
       // Abort fetch if it takes too long to avoid hanging on connection resets
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), 5000);
@@ -82,17 +85,31 @@
           return resp.json();
         })
         .then(function(data){
-          // data.datetime is ISO string
-          const serverMs = Date.parse(data.datetime);
-          if (Number.isFinite(serverMs)){
+          // TimezoneDB returns timestamp (Unix seconds)
+          let serverMs;
+          
+          if (data.timestamp) {
+            // Use Unix timestamp (seconds) from TimezoneDB, convert to milliseconds
+            serverMs = data.timestamp * 1000;
+          } else if (data.datetime) {
+            // Fallback: parse datetime string (format: "YYYY-MM-DD HH:MM:SS")
+            // Replace space with 'T' for ISO compatibility if needed
+            const isoString = data.datetime.replace(' ', 'T');
+            serverMs = Date.parse(isoString);
+          }
+          
+          if (Number.isFinite(serverMs)) {
+            // Calculate offset between server time and local time
             offset = serverMs - Date.now();
             tzAbbrev = data.abbreviation || data.timezone || '';
-            // successful sync: clear any pending retries and reset backoff
+            
+            // successful fetch: clear any pending retries and reset backoff
             if (retryHandle) { clearTimeout(retryHandle); retryHandle = null; }
             retryDelay = 5000;
             failedAttempts = 0;
             fallbackMode = false;
-            updateDisplay();
+            
+            // Start ticking with local Date class
             startTicking();
           } else {
             // bad payload
@@ -104,43 +121,31 @@
         .catch(function(err){
           // handle aborted requests and connection resets gracefully
           failedAttempts++;
-          // If the failures are persistent, switch to fallback: show local clock
           maybeEnterFallback();
           scheduleRetry();
         });
     }
 
     function maybeEnterFallback(){
-      // After several failures, stop blocking UI with 'Connecting...' and
-      // show local time (best-effort) while continuing to retry in background.
+      // After several failures, show error message
       if (failedAttempts >= 4 && !fallbackMode){
         fallbackMode = true;
-        // display local time immediately and start ticking locally
-        updateDisplay();
-        if (tickTimer) { clearInterval(tickTimer); }
-        // tick using local Date but continue to attempt resyncs
-        tickTimer = setInterval(function(){
-          const now = new Date();
-          clockEl.textContent = formatTime(now) + (tzAbbrev ? ' ' + tzAbbrev : '');
-        }, 1000);
-        // widen the resync interval to reduce load when remote is flaky
-        if (typeof resyncHandle !== 'undefined') clearInterval(resyncHandle);
-        // try resync less often in fallback (10 minutes)
-        setInterval(syncTime, 10 * 60 * 1000);
+        clockEl.textContent = 'Time unavailable';
       }
     }
 
-    // initial sync
-    syncTime();
+    // Fetch time once on initial load
+    fetchTime();
 
-    // periodic resync to correct drift
-    const resyncHandle = setInterval(syncTime, resyncMs);
-
-    // when page becomes visible again, resync immediately
-    document.addEventListener('visibilitychange', function(){ if(document.visibilityState === 'visible') syncTime(); });
+    // when page becomes visible again, fetch to resync
+    document.addEventListener('visibilitychange', function(){ 
+      if(document.visibilityState === 'visible') fetchTime(); 
+    });
 
     // cleanup if needed when unloading
-    window.addEventListener('beforeunload', function(){ if(tickTimer) clearInterval(tickTimer); clearInterval(resyncHandle); });
+    window.addEventListener('beforeunload', function(){ 
+      if(tickTimer) clearInterval(tickTimer); 
+    });
   })();
   </script>
   <div class="container-fluid">
