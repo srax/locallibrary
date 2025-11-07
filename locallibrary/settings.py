@@ -29,6 +29,12 @@ DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
 ALLOWED_HOSTS = ['wearethebest.up.railway.app', '*']  # Railway will provide the domain via environment
 
+# CSRF Settings for production
+CSRF_TRUSTED_ORIGINS = [
+    'https://wearethebest.up.railway.app',
+    'https://*.up.railway.app',  # Allow all Railway preview deployments
+]
+
 
 # Application definition
 
