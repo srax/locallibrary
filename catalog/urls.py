@@ -11,3 +11,28 @@ urlpatterns = [
     path('mythreads/', views.MyThreadsListView.as_view(), name='my-threads'),
     path('moderator/threads/', views.AllThreadsByUserListView.as_view(), name='all-threads-moderator'),
 ]
+
+# Library URLs
+urlpatterns += [
+    path('books/', views.BookListView.as_view(), name='books'),
+    path('book/<int:pk>', views.BookDetailView.as_view(), name='book-detail'),
+    path('authors/', views.AuthorListView.as_view(), name='authors'),
+    path('author/<int:pk>', views.AuthorDetailView.as_view(), name='author-detail'),
+]
+
+# Book renewal URL for librarians
+urlpatterns += [
+    path('book/<uuid:pk>/renew/', views.renew_book_librarian, name='renew-book-librarian'),
+]
+
+# All borrowed books view for staff
+urlpatterns += [
+    path('borrowed/', views.LoanedBooksAllListView.as_view(), name='all-borrowed'),
+]
+
+# Author CRUD URLs
+urlpatterns += [
+    path('author/create/', views.AuthorCreate.as_view(), name='author-create'),
+    path('author/<int:pk>/update/', views.AuthorUpdate.as_view(), name='author-update'),
+    path('author/<int:pk>/delete/', views.AuthorDelete.as_view(), name='author-delete'),
+]
