@@ -1,0 +1,51 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-11-11 16:32+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: catalog/templates/base_generic.html:7
+msgid "Forum"
+msgstr "Forum - Svensk"
+
+#: catalog/templates/base_generic.html:170
+msgid "Home"
+msgstr "Hem" 
+
+#: catalog/templates/base_generic.html:171
+msgid "All categories"
+msgstr "Alla kategorier"
+
+#: catalog/templates/base_generic.html:172
+msgid "All threads"
+msgstr "Alla trådar"
+
+#: catalog/templates/base_generic.html:174
+msgid "Admin"
+msgstr "Administratör"
+
+#: catalog/templates/base_generic.html:175
+msgid "Users"
+msgstr "Användare"
+
+#: locallibrary/settings.py:18
+msgid "English"
+msgstr "Engelska"
+
+#: locallibrary/settings.py:19
+msgid "Swedish"
+msgstr "Svenska"

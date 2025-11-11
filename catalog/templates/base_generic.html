@@ -1,9 +1,10 @@
 <!doctype html>
-<html lang="en">
+<html lang="{{ LANGUAGE_CODE }}">
 
 <head>
+  {% load i18n %}
   {% block title %}
-  <title>Forum</title>
+  <title>{% trans "Forum" %}</title>
   {% endblock %}
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -166,12 +167,12 @@
           <li><a href="{% url 'login' %}?next={{ request.path }}">Login</a></li>
           {% endif %}
           …
-          <li><a href="{% url 'index' %}">Home</a></li>
-          <li><a href="{% url 'categories' %}">All categories</a></li>
-          <li><a href="{% url 'threads' %}">All threads</a></li>
+          <li><a href="{% url 'index' %}">{% trans "Home" %}</a></li>
+          <li><a href="{% url 'categories' %}">{% trans "All categories" %}</a></li>
+          <li><a href="{% url 'threads' %}">{% trans "All threads" %}</a></li>
           {% if user.is_staff %}
-          <li><a href="/admin/">Admin</a></li>
-          <li><a href="/catalog/users">Users</a></li>
+          <li><a href="/admin/">{% trans "Admin" %}</a></li>
+          <li><a href="/catalog/users">{% trans "Users" %}</a></li>
           {% endif %}
         </ul>
         {% endblock %}
