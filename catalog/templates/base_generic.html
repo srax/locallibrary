@@ -1,3 +1,4 @@
+{% load i18n %}
 <!doctype html>
 <html lang="{{ LANGUAGE_CODE }}">
 
@@ -16,6 +17,23 @@
 </head>
 
 <body>
+  <div style="position: fixed; left: 1rem; top: 0.5; font-size: 0.9rem;">
+    {% block language_selector %}
+    <form action="{% url 'set_language' %}" method="post">
+      {% csrf_token %}
+      <input name="next" type="hidden" value="{{ request.path }}" />
+      <select name="language" onchange="this.form.submit()">
+        {% get_current_language as LANGUAGE_CODE %}
+        {% get_available_languages as LANGUAGES %}
+        {% for lang_code, lang_name in LANGUAGES %}
+        <option value="{{ lang_code }}"{% if lang_code == LANGUAGE_CODE %} selected{% endif %}>
+          {{ lang_name }}
+        </option>
+        {% endfor %}
+      </select>
+    </form>
+    {% endblock %}
+  </div>
   {# Global world clock widget placed here so it appears on every page. #}
   <div id="world-clock" aria-live="polite" style="position:fixed;top:1rem;right:1rem;background:rgba(255,255,255,0.9);padding:0.35rem 0.6rem;border-radius:6px;box-shadow:0 2px 6px rgba(0,0,0,0.12);font-family:monospace;font-weight:600;z-index:9999">Loading clock…</div>
 
