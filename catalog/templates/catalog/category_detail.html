@@ -1,28 +1,29 @@
 {% extends "base_generic.html" %}
+{% load i18n %}
 
 {% block content %}
   <h1>{{ category.name }}</h1>
 
-  <p><strong>Description:</strong> {{ category.description }}</p>
-  <p><strong>Created:</strong> {{ category.created_date }}</p>
+  <p><strong>{% trans "Description:" %}</strong> {{ category.description }}</p>
+  <p><strong>{% trans "Created:" %}</strong> {{ category.created_date }}</p>
 
   <div style="margin-left:20px;margin-top:20px">
-    <h4>Threads in this category:</h4>
+    <h4>{% trans "Threads in this category:" %}</h4>
 
     {% if category.thread_set.all %}
       <ul>
       {% for thread in category.thread_set.all %}
         <li>
           <a href="{{ thread.get_absolute_url }}">{{ thread.title }}</a>
-          {% if thread.is_pinned %}<span class="badge bg-warning">Pinned</span>{% endif %}
-          {% if thread.is_locked %}<span class="badge bg-secondary">Locked</span>{% endif %}
+          {% if thread.is_pinned %}<span class="badge bg-warning">{% trans "Pinned" %}</span>{% endif %}
+          {% if thread.is_locked %}<span class="badge bg-secondary">{% trans "Locked" %}</span>{% endif %}
           <br>
-          <small>by {{ thread.author.username }} - {{ thread.created_date }} - {{ thread.post_count }} posts - {{ thread.views }} views</small>
+          <small>{% trans "by" %} {{ thread.author.username }} - {{ thread.created_date }} - {{ thread.post_count }} {% trans "posts" %} - {{ thread.views }} {% trans "views" %}</small>
         </li>
       {% endfor %}
       </ul>
     {% else %}
-      <p>No threads in this category yet.</p>
+      <p>{% trans "No threads in this category yet." %}</p>
     {% endif %}
   </div>
 {% endblock %}

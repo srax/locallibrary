@@ -1,28 +1,29 @@
 {% extends "base_generic.html" %}
+{% load i18n %}
 
 {% block content %}
   <h1>{{ thread.title }}</h1>
 
   <p>
-    <strong>Category:</strong> <a href="{{ thread.category.get_absolute_url }}">{{ thread.category.name }}</a><br>
-    <strong>Author:</strong> <a href="{{ thread.author.get_absolute_url }}">{{ thread.author.username }}</a><br>
-    <strong>Created:</strong> {{ thread.created_date }}<br>
-    <strong>Last Updated:</strong> {{ thread.updated_date }}<br>
-    <strong>Views:</strong> {{ thread.views }}<br>
-    {% if thread.is_pinned %}<span class="badge bg-warning">Pinned</span>{% endif %}
-    {% if thread.is_locked %}<span class="badge bg-secondary">Locked</span>{% endif %}
+    <strong>{% trans "Category:" %}</strong> <a href="{{ thread.category.get_absolute_url }}">{{ thread.category.name }}</a><br>
+    <strong>{% trans "Author:" %}</strong> <a href="{{ thread.author.get_absolute_url }}">{{ thread.author.username }}</a><br>
+    <strong>{% trans "Created:" %}</strong> {{ thread.created_date }}<br>
+    <strong>{% trans "Last Updated:" %}</strong> {{ thread.updated_date }}<br>
+    <strong>{% trans "Views:" %}</strong> {{ thread.views }}<br>
+    {% if thread.is_pinned %}<span class="badge bg-warning">{% trans "Pinned" %}</span>{% endif %}
+    {% if thread.is_locked %}<span class="badge bg-secondary">{% trans "Locked" %}</span>{% endif %}
   </p>
 
   <hr>
 
-  <h4>Posts in this thread:</h4>
+  <h4>{% trans "Posts in this thread:" %}</h4>
   <div style="margin-left:20px;margin-top:20px">
     {% if thread.post_set.all %}
       {% for post in thread.post_set.all %}
         <div class="card mb-3">
           <div class="card-header">
             <strong>{{ post.author.username }}</strong> - {{ post.created_date }}
-            {% if post.is_edited %}<em>(edited)</em>{% endif %}
+            {% if post.is_edited %}<em>({% trans "edited" %})</em>{% endif %}
           </div>
           <div class="card-body">
             <p class="card-text">{{ post.content }}</p>
@@ -30,7 +31,7 @@
         </div>
       {% endfor %}
     {% else %}
-      <p>No posts yet. Be the first to post!</p>
+      <p>{% trans "No posts yet. Be the first to post!" %}</p>
     {% endif %}
   </div>
 {% endblock %}

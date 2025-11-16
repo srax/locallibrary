@@ -1,7 +1,8 @@
 {% extends "base_generic.html" %}
+{% load i18n %}
 
 {% block content %}
-  <h1>Users</h1>
+  <h1>{% trans "Users" %}</h1>
 
   {% if page_obj.object_list %}
     <ul class="list-group">
@@ -12,14 +13,14 @@
             {% if user.email %}<small class="text-muted"> — {{ user.email }}</small>{% endif %}
           </div>
           <div>
-            <a class="btn btn-sm btn-outline-primary" href="{{ user.get_absolute_url }}">View profile</a>
+            <a class="btn btn-sm btn-outline-primary" href="{{ user.get_absolute_url }}">{% trans "View profile" %}</a>
           </div>
         </li>
       {% endfor %}
     </ul>
 
   {% else %}
-    <p>No users found.</p>
+    <p>{% trans "No users found." %}</p>
   {% endif %}
 
 {% endblock %}
