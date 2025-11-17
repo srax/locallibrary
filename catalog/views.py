@@ -11,6 +11,7 @@ from django.contrib import messages
 import urllib.request, urllib.error, json
 from datetime import datetime
 import os
+from django.db.models import Q
 
 # Create your views here.
 
@@ -37,8 +38,37 @@ def index(request):
         'recent_threads': recent_threads,
     }
 
+
     # Render the HTML template index.html with the data in the context variable
     return render(request, 'index.html', context=context)
+
+
+def thread_search(request):
+    query = request.GET.get("q", "").strip()
+    category_id = request.GET.get("category", "").strip()
+
+    # Starting with all the current threads
+    threads = Thread.objects.all().select_related("category", "author")
+
+    if query:
+        threads = threads.filter(
+            Q(title__icontains=query) | 
+            Q(post__content__icontains=query)
+        ).distinct()
+
+    if category_id:
+        threads = threads.filter(category_id=category_id)
+
+    categories = Category.objects.all().order_by("name")
+
+    context = {
+        "threads": threads,
+        "query": query,
+        "categories": categories,
+        "selected_category": category_id,
+    }
+
+    return render(request, "catalog/search_results.html", context)
 
 
 class CategoryListView(generic.ListView):

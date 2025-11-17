@@ -16,4 +16,5 @@ urlpatterns = [
     path('post/<int:pk>/edit/', views.PostUpdateView.as_view(), name='post-edit'),
     path('post/<int:pk>/delete/', views.PostDeleteView.as_view(), name='post-delete'),
     path('post/bulk-delete/', views.post_bulk_delete, name='post-bulk-delete'),
+    path('search/', views.thread_search, name='thread-search'),
 ]

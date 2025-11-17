@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-15 19:41-0500\n"
+"POT-Creation-Date: 2025-11-17 16:47-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,364 +18,373 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: .\catalog\templates\base_generic.html:8
+#: catalog/templates/base_generic.html:8
 msgid "Forum"
 msgstr "Forum - Svensk"
 
-#: .\catalog\templates\base_generic.html:181
+#: catalog/templates/base_generic.html:183
+msgid "Search"
+msgstr "Sök"
+
+#: catalog/templates/base_generic.html:193
 msgid "Logout"
 msgstr "Logga ut"
 
-#: .\catalog\templates\base_generic.html:185
+#: catalog/templates/base_generic.html:197
 msgid "Login"
 msgstr "Logga in"
 
-#: .\catalog\templates\base_generic.html:188
+#: catalog/templates/base_generic.html:200
 msgid "Home"
 msgstr "Hem"
 
-#: .\catalog\templates\base_generic.html:189
+#: catalog/templates/base_generic.html:201
+#: catalog/templates/catalog/search_results.html:20
 msgid "All categories"
 msgstr "Alla kategorier"
 
-#: .\catalog\templates\base_generic.html:190
+#: catalog/templates/base_generic.html:202
 msgid "All threads"
 msgstr "Alla trådar"
 
-#: .\catalog\templates\base_generic.html:192
+#: catalog/templates/base_generic.html:207
 msgid "Admin"
 msgstr "Administratör"
 
-#: .\catalog\templates\base_generic.html:193
-#: .\catalog\templates\catalog\user_list.html:5
+#: catalog/templates/base_generic.html:208
+#: catalog/templates/catalog/user_list.html:5
 msgid "Users"
 msgstr "Användare"
 
-#: .\catalog\templates\base_generic.html:204
+#: catalog/templates/base_generic.html:219
 msgid "previous"
 msgstr "föregående"
 
-#: .\catalog\templates\base_generic.html:207
+#: catalog/templates/base_generic.html:222
 msgid "Page"
 msgstr "Sida"
 
-#: .\catalog\templates\base_generic.html:207
+#: catalog/templates/base_generic.html:222
 msgid "of"
 msgstr "av"
 
-#: .\catalog\templates\base_generic.html:210
+#: catalog/templates/base_generic.html:225
 msgid "next"
 msgstr "nästa"
 
-#: .\catalog\templates\catalog\category_detail.html:7
+#: catalog/templates/catalog/category_detail.html:7
 msgid "Description:"
 msgstr "Beskrivning:"
 
-#: .\catalog\templates\catalog\category_detail.html:8
-#: .\catalog\templates\catalog\thread_detail.html:10
-#: .\catalog\templates\catalog\thread_list.html:17
+#: catalog/templates/catalog/category_detail.html:8
+#: catalog/templates/catalog/thread_detail.html:10
+#: catalog/templates/catalog/thread_list.html:17
 msgid "Created:"
 msgstr "Skapad:"
 
-#: .\catalog\templates\catalog\category_detail.html:11
+#: catalog/templates/catalog/category_detail.html:11
 msgid "Threads in this category:"
 msgstr "Trådar i denna kategori:"
 
-#: .\catalog\templates\catalog\category_detail.html:18
-#: .\catalog\templates\catalog\thread_detail.html:13
-#: .\catalog\templates\catalog\thread_list.html:11
+#: catalog/templates/catalog/category_detail.html:18
+#: catalog/templates/catalog/thread_detail.html:13
+#: catalog/templates/catalog/thread_list.html:11
 msgid "Pinned"
 msgstr "Fäst"
 
-#: .\catalog\templates\catalog\category_detail.html:19
-#: .\catalog\templates\catalog\thread_detail.html:14
-#: .\catalog\templates\catalog\thread_list.html:12
+#: catalog/templates/catalog/category_detail.html:19
+#: catalog/templates/catalog/thread_detail.html:14
+#: catalog/templates/catalog/thread_list.html:12
 msgid "Locked"
 msgstr "Låst"
 
-#: .\catalog\templates\catalog\category_detail.html:21
-#: .\catalog\templates\index.html:29
+#: catalog/templates/catalog/category_detail.html:21
+#: catalog/templates/index.html:29
 msgid "by"
 msgstr "av"
 
-#: .\catalog\templates\catalog\category_detail.html:21
+#: catalog/templates/catalog/category_detail.html:21
 msgid "posts"
 msgstr "inlägg"
 
-#: .\catalog\templates\catalog\category_detail.html:21
+#: catalog/templates/catalog/category_detail.html:21
 msgid "views"
 msgstr "visningar"
 
-#: .\catalog\templates\catalog\category_detail.html:26
+#: catalog/templates/catalog/category_detail.html:26
 msgid "No threads in this category yet."
 msgstr "Inga trådar i denna kategori ännu."
 
-#: .\catalog\templates\catalog\category_list.html:5
+#: catalog/templates/catalog/category_list.html:5
 msgid "Forum Categories"
 msgstr "Forumkategorier"
 
-#: .\catalog\templates\catalog\category_list.html:12
-#: .\catalog\templates\index.html:18
+#: catalog/templates/catalog/category_list.html:12
+#: catalog/templates/index.html:18
 msgid "Threads:"
 msgstr "Trådar:"
 
-#: .\catalog\templates\catalog\category_list.html:17
+#: catalog/templates/catalog/category_list.html:17
 msgid "There are no categories in the forum."
 msgstr "Det finns inga kategorier i forumet."
 
-#: .\catalog\templates\catalog\thread_detail.html:8
-#: .\catalog\templates\catalog\thread_list.html:15
+#: catalog/templates/catalog/search_results.html:5
+msgid "Search Results"
+msgstr "Sök resultat"
+
+#: catalog/templates/catalog/search_results.html:12
+msgid "Search for threads..."
+msgstr "Sök efter trådar"
+
+#: catalog/templates/catalog/search_results.html:30
+msgid "Filter"
+msgstr "Filtrera"
+
+#: catalog/templates/catalog/search_results.html:44
+msgid "No matching threads found."
+msgstr "Inga matchade trådar hittades"
+
+#: catalog/templates/catalog/thread_detail.html:8
+#: catalog/templates/catalog/thread_list.html:15
 msgid "Category:"
 msgstr "Kategori:"
 
-#: .\catalog\templates\catalog\thread_detail.html:9
-#: .\catalog\templates\catalog\thread_list.html:16
+#: catalog/templates/catalog/thread_detail.html:9
+#: catalog/templates/catalog/thread_list.html:16
 msgid "Author:"
 msgstr "Författare:"
 
-#: .\catalog\templates\catalog\thread_detail.html:11
+#: catalog/templates/catalog/thread_detail.html:11
 msgid "Last Updated:"
 msgstr "Senast uppdaterad:"
 
-#: .\catalog\templates\catalog\thread_detail.html:12
-#: .\catalog\templates\catalog\thread_list.html:19
+#: catalog/templates/catalog/thread_detail.html:12
+#: catalog/templates/catalog/thread_list.html:19
 msgid "Views:"
 msgstr "Visningar:"
 
-#: .\catalog\templates\catalog\thread_detail.html:19
+#: catalog/templates/catalog/thread_detail.html:19
 msgid "Posts in this thread:"
 msgstr "Inlägg i denna tråd:"
 
-#: .\catalog\templates\catalog\thread_detail.html:26
+#: catalog/templates/catalog/thread_detail.html:26
 msgid "edited"
 msgstr "redigerad"
 
-#: .\catalog\templates\catalog\thread_detail.html:34
+#: catalog/templates/catalog/thread_detail.html:34
 msgid "No posts yet. Be the first to post!"
 msgstr "Inga inlägg ännu. Var först att posta!"
 
-#: .\catalog\templates\catalog\thread_list.html:5
+#: catalog/templates/catalog/thread_list.html:5
 msgid "All Threads"
 msgstr "Alla trådar"
 
-#: .\catalog\templates\catalog\thread_list.html:18
-#: .\catalog\templates\index.html:19
+#: catalog/templates/catalog/thread_list.html:18
+#: catalog/templates/index.html:19
 msgid "Posts:"
 msgstr "Inlägg:"
 
-#: .\catalog\templates\catalog\thread_list.html:25
+#: catalog/templates/catalog/thread_list.html:25
 msgid "There are no threads in the forum."
 msgstr "Det finns inga trådar i forumet."
 
-#: .\catalog\templates\catalog\user_list.html:16
+#: catalog/templates/catalog/user_list.html:16
 msgid "View profile"
 msgstr "Visa profil"
 
-#: .\catalog\templates\catalog\user_list.html:23
+#: catalog/templates/catalog/user_list.html:23
 msgid "No users found."
 msgstr "Inga användare hittades."
 
-#: .\catalog\templates\catalog\userprofile_detail.html:5
+#: catalog/templates/catalog/userprofile_detail.html:5
 msgid "User Profile:"
 msgstr "Användarprofil:"
 
-#: .\catalog\templates\catalog\userprofile_detail.html:8
+#: catalog/templates/catalog/userprofile_detail.html:8
 msgid "edit"
 msgstr "redigera"
 
-#: .\catalog\templates\catalog\userprofile_detail.html:16
+#: catalog/templates/catalog/userprofile_detail.html:16
 msgid "Avatar"
 msgstr "Avatar"
 
-#: .\catalog\templates\catalog\userprofile_detail.html:18
+#: catalog/templates/catalog/userprofile_detail.html:18
 msgid "No Avatar"
 msgstr "Ingen avatar"
 
-#: .\catalog\templates\catalog\userprofile_detail.html:22
+#: catalog/templates/catalog/userprofile_detail.html:22
 msgid "Bio:"
 msgstr "Biografi:"
 
-#: .\catalog\templates\catalog\userprofile_detail.html:23
+#: catalog/templates/catalog/userprofile_detail.html:23
 msgid "Location:"
 msgstr "Plats:"
 
-#: .\catalog\templates\catalog\userprofile_detail.html:25
+#: catalog/templates/catalog/userprofile_detail.html:25
 msgid "Website:"
 msgstr "Webbplats:"
 
-#: .\catalog\templates\catalog\userprofile_detail.html:27
+#: catalog/templates/catalog/userprofile_detail.html:27
 msgid "Joined:"
 msgstr "Gick med:"
 
-#: .\catalog\templates\catalog\userprofile_detail.html:28
+#: catalog/templates/catalog/userprofile_detail.html:28
 msgid "Total Posts:"
 msgstr "Totalt antal inlägg:"
 
-#: .\catalog\templates\catalog\userprofile_detail.html:29
+#: catalog/templates/catalog/userprofile_detail.html:29
 msgid "Total Threads:"
 msgstr "Totalt antal trådar:"
 
-#: .\catalog\templates\catalog\userprofile_detail.html:35
+#: catalog/templates/catalog/userprofile_detail.html:35
 msgid "Recent Threads by"
 msgstr "Senaste trådar av"
 
-#: .\catalog\templates\catalog\userprofile_detail.html:41
-#: .\catalog\templates\index.html:29
+#: catalog/templates/catalog/userprofile_detail.html:41
+#: catalog/templates/index.html:29
 msgid "in"
 msgstr "i"
 
-#: .\catalog\templates\catalog\userprofile_detail.html:47
+#: catalog/templates/catalog/userprofile_detail.html:47
 msgid "No threads created yet."
 msgstr "Inga trådar skapade ännu."
 
-#: .\catalog\templates\catalog\userprofile_detail.html:50
+#: catalog/templates/catalog/userprofile_detail.html:50
 msgid "Recent Posts by"
 msgstr "Senaste inlägg av"
 
-#: .\catalog\templates\catalog\userprofile_detail.html:55
+#: catalog/templates/catalog/userprofile_detail.html:55
 msgid "Post in"
 msgstr "Inlägg i"
 
-#: .\catalog\templates\catalog\userprofile_detail.html:61
+#: catalog/templates/catalog/userprofile_detail.html:61
 msgid "No posts yet."
 msgstr "Inga inlägg ännu."
 
-#: .\catalog\templates\catalog\userprofile_form.html:5
+#: catalog/templates/catalog/userprofile_form.html:5
 msgid "Edit profile:"
 msgstr "Redigera profil:"
 
-#: .\catalog\templates\catalog\userprofile_form.html:10
+#: catalog/templates/catalog/userprofile_form.html:10
 msgid "Save changes"
 msgstr "Spara ändringar"
 
-#: .\catalog\templates\catalog\userprofile_form.html:11
+#: catalog/templates/catalog/userprofile_form.html:11
 msgid "Cancel"
 msgstr "Avbryt"
 
-#: .\catalog\templates\index.html:5
+#: catalog/templates/index.html:5
 msgid "Forum Home"
 msgstr "Forum hem"
 
-#: .\catalog\templates\index.html:12
+#: catalog/templates/index.html:12
 msgid "Welcome to our Forum! A place for discussions and community engagement."
-msgstr "Välkommen till vårt forum! En plats för diskussioner och samhällsengagemang."
+msgstr ""
+"Välkommen till vårt forum! En plats för diskussioner och samhällsengagemang."
 
-#: .\catalog\templates\index.html:14
+#: catalog/templates/index.html:14
 msgid "Forum Statistics"
 msgstr "Forumstatistik"
 
-#: .\catalog\templates\index.html:15
+#: catalog/templates/index.html:15
 msgid "The forum has the following statistics:"
 msgstr "Forumet har följande statistik:"
 
-#: .\catalog\templates\index.html:17
+#: catalog/templates/index.html:17
 msgid "Categories:"
 msgstr "Kategorier:"
 
-#: .\catalog\templates\index.html:20
+#: catalog/templates/index.html:20
 msgid "Users:"
 msgstr "Användare:"
 
-#: .\catalog\templates\index.html:23
+#: catalog/templates/index.html:23
 msgid "Recent Threads"
 msgstr "Senaste trådar"
 
-#: .\catalog\templates\index.html:34
+#: catalog/templates/index.html:34
 msgid "No threads yet. Be the first to start a discussion!"
 msgstr "Inga trådar ännu. Var först att starta en diskussion!"
 
-#: .\locallibrary\settings.py:18
+#: locallibrary/settings.py:18
 msgid "English"
 msgstr "Engelska"
 
-#: .\locallibrary\settings.py:19
+#: locallibrary/settings.py:19
 msgid "Swedish"
 msgstr "Svenska"
 
-#: .\templates\registration\logged_out.html:5
+#: templates/registration/logged_out.html:5
 msgid "Logged out!"
 msgstr "Utloggad!"
 
-#: .\templates\registration\logged_out.html:6
+#: templates/registration/logged_out.html:6
 msgid "Click here to login again."
 msgstr "Klicka här för att logga in igen."
 
-#: .\templates\registration\login.html:7
+#: templates/registration/login.html:7
 msgid "Your username and password didn't match. Please try again."
 msgstr "Ditt användarnamn och lösenord matchade inte. Försök igen."
 
-#: .\templates\registration\login.html:12
+#: templates/registration/login.html:12
 msgid ""
 "Your account doesn't have access to this page. To proceed, please login with "
 "an account that has access."
 msgstr ""
-"Ditt konto har inte tillgång till denna sida. För att fortsätta, logga in med "
-"ett konto som har tillgång."
+"Ditt konto har inte tillgång till denna sida. För att fortsätta, logga in "
+"med ett konto som har tillgång."
 
-#: .\templates\registration\login.html:14
+#: templates/registration/login.html:14
 msgid "Please login to see this page."
 msgstr "Logga in för att se denna sida."
 
-#: .\templates\registration\login.html:30
+#: templates/registration/login.html:30
 msgid "login"
 msgstr "logga in"
 
-#: .\templates\registration\login.html:35
-msgid "Lost password?"
-msgstr "Glömt lösenord?"
+#~ msgid "Lost password?"
+#~ msgstr "Glömt lösenord?"
 
-#: .\templates\registration\password_reset_complete.html:5
-msgid "The password has been changed!"
-msgstr "Lösenordet har ändrats!"
+#~ msgid "The password has been changed!"
+#~ msgstr "Lösenordet har ändrats!"
 
-#: .\templates\registration\password_reset_complete.html:6
-msgid "log in again?"
-msgstr "logga in igen?"
+#~ msgid "log in again?"
+#~ msgstr "logga in igen?"
 
-#: .\templates\registration\password_reset_confirm.html:6
-msgid "Please enter (and confirm) your new password."
-msgstr "Vänligen ange (och bekräfta) ditt nya lösenord."
+#~ msgid "Please enter (and confirm) your new password."
+#~ msgstr "Vänligen ange (och bekräfta) ditt nya lösenord."
 
-#: .\templates\registration\password_reset_confirm.html:12
-msgid "New password:"
-msgstr "Nytt lösenord:"
+#~ msgid "New password:"
+#~ msgstr "Nytt lösenord:"
 
-#: .\templates\registration\password_reset_confirm.html:17
-msgid "Confirm password:"
-msgstr "Bekräfta lösenord:"
+#~ msgid "Confirm password:"
+#~ msgstr "Bekräfta lösenord:"
 
-#: .\templates\registration\password_reset_confirm.html:22
-msgid "Change my password"
-msgstr "Ändra mitt lösenord"
+#~ msgid "Change my password"
+#~ msgstr "Ändra mitt lösenord"
 
-#: .\templates\registration\password_reset_confirm.html:27
-msgid "Password reset failed"
-msgstr "Återställning av lösenord misslyckades"
+#~ msgid "Password reset failed"
+#~ msgstr "Återställning av lösenord misslyckades"
 
-#: .\templates\registration\password_reset_confirm.html:28
-msgid ""
-"The password reset link was invalid, possibly because it has already been "
-"used. Please request a new password reset."
-msgstr ""
-"Länken för återställning av lösenord var ogiltig, möjligen för att den redan har "
-"använts. Begär en ny återställning av lösenordet."
+#~ msgid ""
+#~ "The password reset link was invalid, possibly because it has already been "
+#~ "used. Please request a new password reset."
+#~ msgstr ""
+#~ "Länken för återställning av lösenord var ogiltig, möjligen för att den "
+#~ "redan har använts. Begär en ny återställning av lösenordet."
 
-#: .\templates\registration\password_reset_done.html:5
-msgid ""
-"We've emailed you instructions for setting your password. If they haven't "
-"arrived in a few minutes, check your spam folder."
-msgstr ""
-"Vi har skickat instruktioner för att återställa ditt lösenord via e-post. Om de inte "
-"har kommit fram inom några minuter, kolla din skräppostmapp."
+#~ msgid ""
+#~ "We've emailed you instructions for setting your password. If they haven't "
+#~ "arrived in a few minutes, check your spam folder."
+#~ msgstr ""
+#~ "Vi har skickat instruktioner för att återställa ditt lösenord via e-post. "
+#~ "Om de inte har kommit fram inom några minuter, kolla din skräppostmapp."
 
-#: .\templates\registration\password_reset_email.html:1
-msgid "Someone asked for password reset for email"
-msgstr "Någon begärde återställning av lösenord för e-post"
+#~ msgid "Someone asked for password reset for email"
+#~ msgstr "Någon begärde återställning av lösenord för e-post"
 
-#: .\templates\registration\password_reset_email.html:1
-msgid "Follow the link below:"
-msgstr "Följ länken nedan:"
+#~ msgid "Follow the link below:"
+#~ msgstr "Följ länken nedan:"
 
-#: .\templates\registration\password_reset_form.html:11
-msgid "Reset password"
-msgstr "Återställ lösenord"
+#~ msgid "Reset password"
+#~ msgstr "Återställ lösenord"

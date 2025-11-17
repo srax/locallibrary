@@ -1,0 +1,47 @@
+{% extends "base_generic.html" %}
+{% load i18n %}
+
+{% block content %}
+<h1>{% trans "Search Results" %}</h1>
+
+<form method="get" action="{% url 'thread-search' %}" class="mb-3">
+  <!-- search field -->
+  <input type="text"
+         name="q"
+         value="{{ query }}"
+         placeholder="{% trans 'Search for threads...' %}"
+         class="form-control"
+         style="max-width: 300px; display: inline-block;">
+
+    <!-- Acts as a category filter -->
+  <select name="category"
+          class="form-select"
+          style="max-width: 300px; display: inline-block;">
+    <option value="">{% trans "All categories" %}</option>
+    {% for category in categories %}
+      <option value="{{ category.id }}"
+              {% if selected_category == category.id|stringformat:'s' %}selected{% endif %}>
+        {{ category.name }}
+      </option>
+    {% endfor %}
+  </select>
+
+  <button type="submit" class="btn btn-primary">
+    {% trans "Filter" %}
+  </button>
+</form>
+
+{% if threads %}
+  <ul>
+    {% for thread in threads %}
+      <li>
+        <a href="{{ thread.get_absolute_url }}">{{ thread.title }}</a>
+        <small>({{ thread.category.name }})</small>
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>{% trans "No matching threads found." %}</p>
+{% endif %}
+
+{% endblock %}
