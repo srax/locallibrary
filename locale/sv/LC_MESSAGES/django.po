@@ -23,10 +23,8 @@ msgid "Forum"
 msgstr "Forum - Svensk"
 
 #: catalog/templates/base_generic.html:180
-#, fuzzy
-#| msgid "Search for threads..."
 msgid "Search threads..."
-msgstr "Sök efter trådar"
+msgstr "Sök efter trådar..."
 
 #: catalog/templates/base_generic.html:183
 msgid "Search"
