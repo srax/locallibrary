@@ -1,12 +1,13 @@
 {% extends "base_generic.html" %}
+{% load i18n %}
 
 {% block content %}
-  <h1>Edit profile: {{ object.user.username }}</h1>
+  <h1>{% trans "Edit profile:" %} {{ object.user.username }}</h1>
 
   <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">Save changes</button>
-    <a href="{% url 'profile-detail' object.pk %}" class="btn btn-secondary">Cancel</a>
+    <button type="submit" class="btn btn-primary">{% trans "Save changes" %}</button>
+    <a href="{% url 'profile-detail' object.pk %}" class="btn btn-secondary">{% trans "Cancel" %}</a>
   </form>
 {% endblock %}

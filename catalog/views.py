@@ -1,11 +1,13 @@
 from asyncio.log import logger
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views import generic
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
 from django.http import JsonResponse, HttpResponseServerError
 from django.core.cache import cache
+from django.contrib import messages
 import urllib.request, urllib.error, json
 from datetime import datetime
 import os
@@ -175,4 +177,88 @@ class UserListView(LoginRequiredMixin, UserPassesTestMixin, generic.ListView):
 class UserDetailView(generic.DetailView):
     model = User
     template_name = 'catalog/userprofile_detail.html'
+
+
+class MyPostsListView(LoginRequiredMixin, generic.ListView):
+    """List view showing all posts by the logged-in user."""
+    model = Post
+    template_name = 'catalog/my_posts.html'
+    context_object_name = 'posts'
+    paginate_by = 10
+
+    def get_queryset(self):
+        # Only show posts by the current user
+        return Post.objects.filter(author=self.request.user).order_by('-created_date')
+
+
+class PostCreateView(LoginRequiredMixin, generic.CreateView):
+    """Create a new post in a thread."""
+    model = Post
+    fields = ['thread', 'content']
+    template_name = 'catalog/post_form.html'
+    
+    def form_valid(self, form):
+        # Set the author to the current user
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+    
+    def get_success_url(self):
+        # Redirect to the thread detail page
+        return reverse_lazy('thread-detail', kwargs={'pk': self.object.thread.pk})
+
+
+class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView):
+    """Update an existing post."""
+    model = Post
+    fields = ['content']
+    template_name = 'catalog/post_form.html'
+    
+    def form_valid(self, form):
+        # Mark the post as edited
+        form.instance.is_edited = True
+        return super().form_valid(form)
+    
+    def test_func(self):
+        # Only allow the author or staff to edit
+        post = self.get_object()
+        return self.request.user == post.author or self.request.user.is_staff
+    
+    def get_success_url(self):
+        # Redirect to the thread detail page
+        return reverse_lazy('thread-detail', kwargs={'pk': self.object.thread.pk})
+
+
+class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteView):
+    """Delete a post."""
+    model = Post
+    template_name = 'catalog/post_confirm_delete.html'
+    
+    def test_func(self):
+        # Only allow the author or staff to delete
+        post = self.get_object()
+        return self.request.user == post.author or self.request.user.is_staff
+    
+    def get_success_url(self):
+        # Redirect to my posts page
+        return reverse_lazy('my-posts')
+
+
+@login_required
+def post_bulk_delete(request):
+    """Delete multiple posts at once."""
+    if request.method == 'POST':
+        post_ids = request.POST.getlist('post_ids')
+        if post_ids:
+            # Only delete posts that belong to the current user
+            posts_to_delete = Post.objects.filter(
+                pk__in=post_ids,
+                author=request.user
+            )
+            count = posts_to_delete.count()
+            posts_to_delete.delete()
+            messages.success(request, f'Successfully deleted {count} post(s).')
+        else:
+            messages.warning(request, 'No posts selected for deletion.')
+    
+    return redirect('my-posts')
 

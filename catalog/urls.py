@@ -11,4 +11,9 @@ urlpatterns = [
     path('profile/<int:pk>/edit/', views.UserProfileUpdateView.as_view(), name='profile-edit'),
     path('api/time/', views.time_proxy, name='time-proxy'),
     path('users/', views.UserListView.as_view(), name='users'),
+    path('my-posts/', views.MyPostsListView.as_view(), name='my-posts'),
+    path('post/new/', views.PostCreateView.as_view(), name='post-create'),
+    path('post/<int:pk>/edit/', views.PostUpdateView.as_view(), name='post-edit'),
+    path('post/<int:pk>/delete/', views.PostDeleteView.as_view(), name='post-delete'),
+    path('post/bulk-delete/', views.post_bulk_delete, name='post-bulk-delete'),
 ]
