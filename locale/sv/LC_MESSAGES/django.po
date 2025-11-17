@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-17 16:47-0500\n"
+"POT-Creation-Date: 2025-11-17 17:29-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,6 +21,12 @@ msgstr ""
 #: catalog/templates/base_generic.html:8
 msgid "Forum"
 msgstr "Forum - Svensk"
+
+#: catalog/templates/base_generic.html:180
+#, fuzzy
+#| msgid "Search for threads..."
+msgid "Search threads..."
+msgstr "Sök efter trådar"
 
 #: catalog/templates/base_generic.html:183
 msgid "Search"
@@ -39,7 +45,7 @@ msgid "Home"
 msgstr "Hem"
 
 #: catalog/templates/base_generic.html:201
-#: catalog/templates/catalog/search_results.html:20
+#: catalog/templates/catalog/search_results.html:19
 msgid "All categories"
 msgstr "Alla kategorier"
 
@@ -136,11 +142,11 @@ msgstr "Sök resultat"
 msgid "Search for threads..."
 msgstr "Sök efter trådar"
 
-#: catalog/templates/catalog/search_results.html:30
+#: catalog/templates/catalog/search_results.html:29
 msgid "Filter"
 msgstr "Filtrera"
 
-#: catalog/templates/catalog/search_results.html:44
+#: catalog/templates/catalog/search_results.html:43
 msgid "No matching threads found."
 msgstr "Inga matchade trådar hittades"
 
