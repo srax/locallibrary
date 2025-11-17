@@ -5,15 +5,14 @@
 <h1>{% trans "Search Results" %}</h1>
 
 <form method="get" action="{% url 'thread-search' %}" class="mb-3">
-  <!-- search field -->
-  <input type="text"
+
+    <input type="text"
          name="q"
          value="{{ query }}"
          placeholder="{% trans 'Search for threads...' %}"
          class="form-control"
          style="max-width: 300px; display: inline-block;">
 
-    <!-- Acts as a category filter -->
   <select name="category"
           class="form-select"
           style="max-width: 300px; display: inline-block;">
