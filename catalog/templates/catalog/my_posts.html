@@ -1,0 +1,102 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h1>My Posts</h1>
+
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+  {% endif %}
+
+  {% if posts %}
+    <div class="mb-3">
+      <a href="{% url 'post-create' %}" class="btn btn-primary">Create New Post</a>
+      <button type="button" id="bulk-delete-btn" class="btn btn-danger" disabled>Delete Selected</button>
+      <button type="button" id="select-all-btn" class="btn btn-outline-secondary">Select All</button>
+    </div>
+
+    <form id="bulk-delete-form" method="post" action="{% url 'post-bulk-delete' %}">
+      {% csrf_token %}
+      <div class="list-group">
+        {% for post in posts %}
+          <div class="list-group-item">
+            <div class="d-flex align-items-start">
+              <div class="form-check me-3">
+                <input class="form-check-input post-checkbox" type="checkbox" name="post_ids" value="{{ post.pk }}" id="post-{{ post.pk }}">
+              </div>
+              <div class="flex-grow-1">
+                <div class="d-flex w-100 justify-content-between">
+                  <h5 class="mb-1">
+                    <a href="{% url 'thread-detail' post.thread.pk %}">{{ post.thread.title }}</a>
+                  </h5>
+                  <small class="text-muted">{{ post.created_date|date:"M d, Y H:i" }}</small>
+                </div>
+                <p class="mb-1">{{ post.content|truncatewords:30 }}</p>
+                {% if post.is_edited %}
+                  <small class="text-muted">(Edited on {{ post.updated_date|date:"M d, Y H:i" }})</small>
+                {% endif %}
+                <div class="mt-2">
+                  <a href="{% url 'post-edit' post.pk %}" class="btn btn-sm btn-outline-primary">Edit</a>
+                  <a href="{% url 'post-delete' post.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                  <a href="{% url 'thread-detail' post.thread.pk %}" class="btn btn-sm btn-outline-secondary">View Thread</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </form>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const checkboxes = document.querySelectorAll('.post-checkbox');
+        const bulkDeleteBtn = document.getElementById('bulk-delete-btn');
+        const selectAllBtn = document.getElementById('select-all-btn');
+        const bulkDeleteForm = document.getElementById('bulk-delete-form');
+        let allSelected = false;
+
+        // Update delete button state
+        function updateDeleteButton() {
+          const checkedCount = document.querySelectorAll('.post-checkbox:checked').length;
+          bulkDeleteBtn.disabled = checkedCount === 0;
+          bulkDeleteBtn.textContent = checkedCount > 0 ? `Delete Selected (${checkedCount})` : 'Delete Selected';
+        }
+
+        // Handle checkbox changes
+        checkboxes.forEach(checkbox => {
+          checkbox.addEventListener('change', updateDeleteButton);
+        });
+
+        // Handle select all
+        selectAllBtn.addEventListener('click', function() {
+          allSelected = !allSelected;
+          checkboxes.forEach(checkbox => {
+            checkbox.checked = allSelected;
+          });
+          selectAllBtn.textContent = allSelected ? 'Deselect All' : 'Select All';
+          updateDeleteButton();
+        });
+
+        // Handle bulk delete
+        bulkDeleteBtn.addEventListener('click', function() {
+          const checkedCount = document.querySelectorAll('.post-checkbox:checked').length;
+          if (checkedCount > 0) {
+            const confirmed = confirm(`Are you sure you want to delete ${checkedCount} post(s)? This action cannot be undone.`);
+            if (confirmed) {
+              bulkDeleteForm.submit();
+            }
+          }
+        });
+      });
+    </script>
+
+  {% else %}
+    <p>You haven't made any posts yet.</p>
+    <a href="{% url 'post-create' %}" class="btn btn-primary">Create Your First Post</a>
+  {% endif %}
+
+{% endblock %}

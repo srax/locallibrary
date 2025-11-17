@@ -188,6 +188,9 @@
           <li><a href="{% url 'index' %}">{% trans "Home" %}</a></li>
           <li><a href="{% url 'categories' %}">{% trans "All categories" %}</a></li>
           <li><a href="{% url 'threads' %}">{% trans "All threads" %}</a></li>
+          {% if user.is_authenticated %}
+          <li><a href="{% url 'my-posts' %}">My Posts</a></li>
+          {% endif %}
           {% if user.is_staff %}
           <li><a href="/admin/">{% trans "Admin" %}</a></li>
           <li><a href="/catalog/users">{% trans "Users" %}</a></li>
