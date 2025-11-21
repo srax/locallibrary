@@ -17,12 +17,13 @@
 </head>
 
 <body>
-  <div style="position: fixed; left: 1rem; top: 0.5; font-size: 0.9rem;">
+  {# Language selector - fixed position #}
+  <div style="position: fixed; left: 1rem; top: 0.5rem; font-size: 0.9rem; z-index: 10000;">
     {% block language_selector %}
     <form action="{% url 'set_language' %}" method="post">
       {% csrf_token %}
       <input name="next" type="hidden" value="{{ request.path }}" />
-      <select name="language" onchange="this.form.submit()">
+      <select name="language" onchange="this.form.submit()" style="padding: 0.25rem; border-radius: 0.25rem; border: 1px solid #dee2e6;">
         {% get_current_language as LANGUAGE_CODE %}
         {% get_available_languages as LANGUAGES %}
         {% for lang_code, lang_name in LANGUAGES %}
@@ -34,8 +35,46 @@
     </form>
     {% endblock %}
   </div>
+  
   {# Global world clock widget placed here so it appears on every page. #}
   <div id="world-clock" aria-live="polite" style="position:fixed;top:1rem;right:1rem;background:rgba(255,255,255,0.9);padding:0.35rem 0.6rem;border-radius:6px;box-shadow:0 2px 6px rgba(0,0,0,0.12);font-family:monospace;font-weight:600;z-index:9999">Loading clock…</div>
+
+  {# Main Header Navigation #}
+  <header class="main-header">
+    <div class="container-fluid">
+      <nav class="nav-container">
+        <a href="{% url 'index' %}" class="nav-brand">{% trans "Forum" %}</a>
+
+        {# Search Form in Header #}
+        <form action="{% url 'thread-search' %}" method="get" class="header-search-form">
+          <input type="text" name="q" class="search-input" placeholder="{% trans 'Search threads...' %}" value="{{ request.GET.q|default_if_none:'' }}">
+          <button type="submit" class="search-btn">{% trans "Search" %}</button>
+        </form>
+
+        <ul class="nav-links">
+          <li><a href="{% url 'index' %}">{% trans "Home" %}</a></li>
+          <li><a href="{% url 'categories' %}">{% trans "All Categories" %}</a></li>
+          <li><a href="{% url 'threads' %}">{% trans "All Threads" %}</a></li>
+          {% if user.is_authenticated %}
+            <li><a href="{% url 'my-posts' %}">{% trans "My Posts" %}</a></li>
+            <li><a href="{{ user.get_absolute_url }}">{{ user.get_username }}</a></li>
+            <li>
+              <form id="logout-form-header" method="post" action="{% url 'logout' %}" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-link">{% trans "Logout" %}</button>
+              </form>
+            </li>
+            {% if user.is_staff %}
+              <li><a href="/admin/">{% trans "Admin" %}</a></li>
+              <li><a href="/catalog/users">{% trans "Users" %}</a></li>
+            {% endif %}
+          {% else %}
+            <li><a href="{% url 'login' %}?next={{ request.path }}" class="btn-primary">{% trans "Login" %}</a></li>
+          {% endif %}
+        </ul>
+      </nav>
+    </div>
+  </header>
 
   <script>
   (function(){
@@ -169,48 +208,17 @@
   </script>
   <div class="container-fluid">
     <div class="row">
+      {% block sidebar %}
       <div class="col-sm-2">
-        {% block sidebar %}
         <ul class="sidebar-nav">
-          <li>
-            <form action="{% url 'thread-search' %}" method="get" class="mb-2">
-              <input type="text"
-                     name="q"
-                     class="form-control"
-                     placeholder="{% trans 'Search threads...' %}"
-                     value="{{ request.GET.q|default_if_none:'' }}">
-              <button type="submit" class="btn btn-primary btn-sm mt-1">
-                {% trans "Search" %}
-              </button>
-            </form>
-          </li>
-          …
           {% if user.is_authenticated %}
-          <li>User: <a href="{{ user.get_absolute_url }}">{{ user.get_username }}</a></li>
-          <li>
-            <form id="logout-form" method="post" action="{% url 'logout' %}">
-              {% csrf_token %}
-              <button type="submit" class="btn btn-link">{% trans "Logout" %}</button>
-            </form>
-          </li>
-          {% else %}
-          <li><a href="{% url 'login' %}?next={{ request.path }}">{% trans "Login" %}</a></li>
-          {% endif %}
-          …
-          <li><a href="{% url 'index' %}">{% trans "Home" %}</a></li>
-          <li><a href="{% url 'categories' %}">{% trans "All categories" %}</a></li>
-          <li><a href="{% url 'threads' %}">{% trans "All threads" %}</a></li>
-          {% if user.is_authenticated %}
-          <li><a href="{% url 'my-posts' %}">My Posts</a></li>
-          {% endif %}
-          {% if user.is_staff %}
-          <li><a href="/admin/">{% trans "Admin" %}</a></li>
-          <li><a href="/catalog/users">{% trans "Users" %}</a></li>
+          <li><strong>{% trans "Welcome" %}, {{ user.get_username }}!</strong></li>
           {% endif %}
         </ul>
-        {% endblock %}
       </div>
-      <div class="col-sm-10 ">{% block content %}{% endblock %}
+      {% endblock %}
+      <div class="col-sm-10 content-area">
+        {% block content %}{% endblock %}
         {% block pagination %}
         {% if is_paginated %}
         <div class="pagination">

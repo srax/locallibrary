@@ -3,24 +3,26 @@
 
 {% block content %}
   <h1>{% trans "All Threads" %}</h1>
+
   {% if thread_list %}
-  <ul>
-    {% for thread in thread_list %}
-      <li>
-        <a href="{{ thread.get_absolute_url }}"><strong>{{ thread.title }}</strong></a>
-        {% if thread.is_pinned %}<span class="badge bg-warning">{% trans "Pinned" %}</span>{% endif %}
-        {% if thread.is_locked %}<span class="badge bg-secondary">{% trans "Locked" %}</span>{% endif %}
-        <br>
-        <small>
-          {% trans "Category:" %} <a href="{{ thread.category.get_absolute_url }}">{{ thread.category.name }}</a> |
-          {% trans "Author:" %} {{ thread.author.username }} |
-          {% trans "Created:" %} {{ thread.created_date }} |
-          {% trans "Posts:" %} {{ thread.post_count }} |
-          {% trans "Views:" %} {{ thread.views }}
-        </small>
-      </li>
-    {% endfor %}
-  </ul>
+    <div class="thread-list">
+      {% for thread in thread_list %}
+        <div class="thread-item">
+          <div class="thread-header">
+            <a href="{{ thread.get_absolute_url }}" class="thread-title">{{ thread.title }}</a>
+            {% if thread.is_pinned %}<span class="badge bg-warning">{% trans "Pinned" %}</span>{% endif %}
+            {% if thread.is_locked %}<span class="badge bg-secondary">{% trans "Locked" %}</span>{% endif %}
+          </div>
+          <div class="thread-meta">
+            {% trans "Category:" %} <a href="{{ thread.category.get_absolute_url }}">{{ thread.category.name }}</a> •
+            {% trans "Author:" %} {{ thread.author.username }} •
+            {% trans "Created:" %} {{ thread.created_date }} •
+            {% trans "Posts:" %} {{ thread.post_count }} •
+            {% trans "Views:" %} {{ thread.views }}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
   {% else %}
     <p>{% trans "There are no threads in the forum." %}</p>
   {% endif %}

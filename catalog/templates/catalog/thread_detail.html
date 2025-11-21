@@ -17,12 +17,12 @@
   <hr>
 
   <h4>{% trans "Posts in this thread:" %}</h4>
-  <div style="margin-left:20px;margin-top:20px">
+  <div class="posts-container">
     {% if thread.post_set.all %}
       {% for post in thread.post_set.all %}
         <div class="card mb-3">
           <div class="card-header">
-            <strong><a href="{{ post.author.get_absolute_url }}">{{ post.author.username }}</a></strong> - {{ post.created_date }}
+            <strong><a href="{{ post.author.get_absolute_url }}">{{ post.author.username }}</a></strong> • {{ post.created_date }}
             {% if post.is_edited %}<em>({% trans "edited" %})</em>{% endif %}
           </div>
           <div class="card-body">

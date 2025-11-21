@@ -2,44 +2,43 @@
 {% load i18n %}
 
 {% block content %}
-  <h1>{% trans "User Profile:" %} {{ userprofile.user.username }}
-    {% if request.user.is_authenticated %}
-      {% if request.user == userprofile.user or request.user.is_staff %}
-      &nbsp;<a href="{% url 'profile-edit' userprofile.pk %}" style="text-decoration: none;">[{% trans "edit" %}]</a>
-      {% endif %}
+  <h1>{{ userprofile.user.username }}</h1>
+  
+  {% if request.user.is_authenticated %}
+    {% if request.user == userprofile.user or request.user.is_staff %}
+      <p><a href="{% url 'profile-edit' userprofile.pk %}" class="btn btn-primary">{% trans "Edit Profile" %}</a></p>
     {% endif %}
-  </h1>
+  {% endif %}
 
-  <div class="row">
-    <div class="col-md-3">
-      {% if userprofile.avatar %}
-        <img src="{{ userprofile.avatar }}" class="img-fluid" alt="{% trans 'Avatar' %}">
-      {% else %}
-        <div class="bg-secondary text-white p-5 text-center">{% trans "No Avatar" %}</div>
-      {% endif %}
-    </div>
-    <div class="col-md-9">
-      <p><strong>{% trans "Bio:" %}</strong> {{ userprofile.bio|default:"No bio provided" }}</p>
-      <p><strong>{% trans "Location:" %}</strong> {{ userprofile.location|default:"Not specified" }}</p>
-      {% if userprofile.website %}
-        <p><strong>{% trans "Website:" %}</strong> <a href="{{ userprofile.website }}" target="_blank">{{ userprofile.website }}</a></p>
-      {% endif %}
-      <p><strong>{% trans "Joined:" %}</strong> {{ userprofile.joined_date }}</p>
-      <p><strong>{% trans "Total Posts:" %}</strong> {{ userprofile.post_count }}</p>
-      <p><strong>{% trans "Total Threads:" %}</strong> {{ userprofile.thread_count }}</p>
-    </div>
-  </div>
+  {% if userprofile.avatar %}
+    <p><img src="{{ userprofile.avatar }}" alt="{{ userprofile.user.username }}" style="max-width: 200px;"></p>
+  {% endif %}
 
-  <hr>
+  <p><strong>{% trans "Threads:" %}</strong> {{ userprofile.thread_count }}</p>
+  <p><strong>{% trans "Posts:" %}</strong> {{ userprofile.post_count }}</p>
 
-  <h4>{% trans "Recent Threads by" %} {{ userprofile.user.username }}</h4>
+  {% if userprofile.bio %}
+    <p><strong>{% trans "Bio:" %}</strong> {{ userprofile.bio }}</p>
+  {% endif %}
+
+  {% if userprofile.location %}
+    <p><strong>{% trans "Location:" %}</strong> {{ userprofile.location }}</p>
+  {% endif %}
+
+  {% if userprofile.website %}
+    <p><strong>{% trans "Website:" %}</strong> <a href="{{ userprofile.website }}" target="_blank">{{ userprofile.website }}</a></p>
+  {% endif %}
+
+  <p><strong>{% trans "Member since:" %}</strong> {{ userprofile.joined_date|date:"F Y" }}</p>
+
+  <h2>{% trans "Recent Threads" %}</h2>
   {% if userprofile.user.threads.all %}
     <ul>
       {% for thread in userprofile.user.threads.all|slice:":5" %}
         <li>
-          <a href="{{ thread.get_absolute_url }}">{{ thread.title }}</a> 
-          {% trans "in" %} <a href="{{ thread.category.get_absolute_url }}">{{ thread.category.name }}</a>
-          - {{ thread.created_date }}
+          <a href="{{ thread.get_absolute_url }}">{{ thread.title }}</a>
+          - {% trans "in" %} <a href="{{ thread.category.get_absolute_url }}">{{ thread.category.name }}</a>
+          ({{ thread.created_date|date:"M d, Y" }})
         </li>
       {% endfor %}
     </ul>
@@ -47,13 +46,13 @@
     <p>{% trans "No threads created yet." %}</p>
   {% endif %}
 
-  <h4>{% trans "Recent Posts by" %} {{ userprofile.user.username }}</h4>
+  <h2>{% trans "Recent Posts" %}</h2>
   {% if userprofile.user.posts.all %}
     <ul>
       {% for post in userprofile.user.posts.all|slice:":5" %}
         <li>
-          {% trans "Post in" %} <a href="{{ post.thread.get_absolute_url }}">{{ post.thread.title }}</a>
-          - {{ post.created_date }}
+          <a href="{{ post.thread.get_absolute_url }}">{{ post.thread.title }}</a>
+          ({{ post.created_date|date:"M d, Y" }})
         </li>
       {% endfor %}
     </ul>
