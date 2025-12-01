@@ -3,6 +3,7 @@ from . import views
 
 urlpatterns = [
     path('', views.index, name='index'),
+    path('help/', views.help_page, name='help'),
     path('categories/', views.CategoryListView.as_view(), name='categories'),
     path('category/<int:pk>', views.CategoryDetailView.as_view(), name='category-detail'),
     path('threads/', views.ThreadListView.as_view(), name='threads'),
@@ -17,4 +18,7 @@ urlpatterns = [
     path('post/<int:pk>/delete/', views.PostDeleteView.as_view(), name='post-delete'),
     path('post/bulk-delete/', views.post_bulk_delete, name='post-bulk-delete'),
     path('search/', views.thread_search, name='thread-search'),
+    path('register/step1/', views.register_step1, name='register-step1'),
+    path('register/step2/', views.register_step2, name='register-step2'),
+    path('register/skip/', views.register_skip, name='register-skip'),
 ]

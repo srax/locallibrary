@@ -49,6 +49,10 @@
 
       <input type="hidden" name="next" value="{{ next }}">
     </form>
+
+    <div class="form-footer-note">
+      <p>{% trans "Don't have an account?" %} <a href="{% url 'register-step1' %}">{% trans "Create one here" %}</a></p>
+    </div>
   </div>
 
 {% endblock %}

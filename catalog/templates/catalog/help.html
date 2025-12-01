@@ -1,0 +1,161 @@
+{% extends "base_generic.html" %}
+{% load i18n %}
+
+{% block content %}
+<div style="max-width: 800px; margin: 0 auto;">
+  <h1>{% trans "Help & Getting Started" %}</h1>
+  <p class="text-muted">{% trans "Welcome to our forum! Here's everything you need to know to get started." %}</p>
+
+  <hr style="margin: 2rem 0;">
+
+  <section style="margin-bottom: 2.5rem;">
+    <h2>{% trans "Creating an Account" %}</h2>
+    <p>{% trans "To participate in discussions, you'll need to create an account:" %}</p>
+    <ol>
+      <li>{% trans "Click the" %} <strong>{% trans "Sign Up" %}</strong> {% trans "button in the navigation bar" %}</li>
+      <li>{% trans "Fill in your username, email, and password (Step 1)" %}</li>
+      <li>{% trans "Complete your profile information (Step 2) - or skip it for later" %}</li>
+      <li>{% trans "You're ready to start posting!" %}</li>
+    </ol>
+    <p class="text-muted">{% trans "Note: Usernames and email addresses must be unique. If you skip Step 2, you can complete your profile anytime from your profile page." %}</p>
+  </section>
+
+  <section style="margin-bottom: 2.5rem;">
+    <h2>{% trans "Browsing the Forum" %}</h2>
+    <ul>
+      <li><strong>{% trans "Home" %}:</strong> {% trans "See recent threads and forum statistics" %}</li>
+      <li><strong>{% trans "All Categories" %}:</strong> {% trans "Browse all discussion categories" %}</li>
+      <li><strong>{% trans "All Threads" %}:</strong> {% trans "View all discussion threads across categories" %}</li>
+      <li><strong>{% trans "Search" %}:</strong> {% trans "Use the search bar in the header to find specific threads or topics" %}</li>
+    </ul>
+  </section>
+
+  <section style="margin-bottom: 2.5rem;">
+    <h2>{% trans "Creating Posts" %}</h2>
+    <p>{% trans "To create a new post in a thread:" %}</p>
+    <ol>
+      <li>{% trans "Navigate to the thread you want to post in" %}</li>
+      <li>{% trans "Click" %} <strong>{% trans "Create New Post" %}</strong></li>
+      <li>{% trans "Select the thread and write your content" %}</li>
+      <li>{% trans "Click" %} <strong>{% trans "Save" %}</strong> {% trans "to publish your post" %}</li>
+    </ol>
+    <p class="text-muted">{% trans "You can view all your posts by clicking" %} <strong>{% trans "My Posts" %}</strong> {% trans "in the navigation menu." %}</p>
+  </section>
+
+  <section style="margin-bottom: 2.5rem;">
+    <h2>{% trans "Managing Your Posts" %}</h2>
+    <p>{% trans "You have full control over your posts:" %}</p>
+    <ul>
+      <li><strong>{% trans "Edit" %}:</strong> {% trans "Click the edit button on any of your posts to modify the content" %}</li>
+      <li><strong>{% trans "Delete" %}:</strong> {% trans "Remove individual posts or bulk delete multiple posts at once from the My Posts page" %}</li>
+      <li><strong>{% trans "Edited Posts" %}:</strong> {% trans "Posts that have been edited will show an '(edited)' label" %}</li>
+    </ul>
+  </section>
+
+  <section style="margin-bottom: 2.5rem;">
+    <h2>{% trans "Your Profile" %}</h2>
+    <p>{% trans "Click your username in the navigation to view your profile. From there you can:" %}</p>
+    <ul>
+      <li>{% trans "See your post and thread counts" %}</li>
+      <li>{% trans "View when you joined" %}</li>
+      <li>{% trans "Edit your profile information (bio, location, website, avatar)" %}</li>
+      <li>{% trans "View all your posts and threads" %}</li>
+    </ul>
+    <p class="text-muted">{% trans "Click the" %} <strong>{% trans "Edit Profile" %}</strong> {% trans "button to update your information." %}</p>
+  </section>
+
+  <section style="margin-bottom: 2.5rem;">
+    <h2>{% trans "Dark Mode" %}</h2>
+    <p>{% trans "Toggle between light and dark themes by clicking the sun/moon icon next to the Forum logo in the header. Your preference is saved automatically." %}</p>
+  </section>
+
+  <section style="margin-bottom: 2.5rem;">
+    <h2>{% trans "Language Selection" %}</h2>
+    <p>{% trans "Change the site language using the dropdown in the top-left corner of the page. Available languages will be shown in the selector." %}</p>
+  </section>
+
+  <section style="margin-bottom: 2.5rem;">
+    <h2>{% trans "Forum Features" %}</h2>
+    <div class="card" style="margin-bottom: 1rem;">
+      <div class="card-header">
+        <strong>{% trans "Threads" %}</strong>
+      </div>
+      <div class="card-body">
+        <ul style="margin: 0; padding-left: 1.5rem;">
+          <li>{% trans "Threads can be pinned to stay at the top of lists" %}</li>
+          <li>{% trans "Locked threads prevent new posts from being added" %}</li>
+          <li>{% trans "View counts show how many times a thread has been viewed" %}</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom: 1rem;">
+      <div class="card-header">
+        <strong>{% trans "Categories" %}</strong>
+      </div>
+      <div class="card-body">
+        <ul style="margin: 0; padding-left: 1.5rem;">
+          <li>{% trans "Each thread belongs to a category" %}</li>
+          <li>{% trans "Click on a category to see all threads within it" %}</li>
+          <li>{% trans "Categories help organize discussions by topic" %}</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <strong>{% trans "Search" %}</strong>
+      </div>
+      <div class="card-body">
+        <ul style="margin: 0; padding-left: 1.5rem;">
+          <li>{% trans "Search by thread title or post content" %}</li>
+          <li>{% trans "Filter results by category" %}</li>
+          <li>{% trans "Results show matching threads with their metadata" %}</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section style="margin-bottom: 2.5rem;">
+    <h2>{% trans "Community Guidelines" %}</h2>
+    <div style="padding: 1.5rem; background-color: var(--bg-light); border-radius: var(--border-radius); border-left: 4px solid var(--primary-color);">
+      <ul style="margin: 0; padding-left: 1.5rem;">
+        <li>{% trans "Be respectful to other forum members" %}</li>
+        <li>{% trans "Stay on topic within threads" %}</li>
+        <li>{% trans "Use appropriate language and content" %}</li>
+        <li>{% trans "Don't spam or post duplicate content" %}</li>
+        <li>{% trans "Report inappropriate content to moderators" %}</li>
+      </ul>
+    </div>
+  </section>
+
+  <section style="margin-bottom: 2.5rem;">
+    <h2>{% trans "Need More Help?" %}</h2>
+    <p>{% trans "If you have questions or issues:" %}</p>
+    <ul>
+      <li>{% trans "Check if your question is already answered above" %}</li>
+      <li>{% trans "Contact the forum administrators" %}</li>
+      {% if user.is_authenticated and user.is_staff %}
+        <li>{% trans "As a staff member, you can access the" %} <a href="/admin/">{% trans "admin panel" %}</a> {% trans "for additional management features" %}</li>
+      {% endif %}
+    </ul>
+  </section>
+
+  <div style="text-align: center; margin-top: 3rem; padding: 2rem; background-color: var(--bg-light); border-radius: var(--border-radius);">
+    <h3 style="margin-top: 0;">{% trans "Ready to Get Started?" %}</h3>
+    {% if user.is_authenticated %}
+      <p>{% trans "You're all set! Start exploring threads or create your first post." %}</p>
+      <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 1.5rem;">
+        <a href="{% url 'threads' %}" class="btn btn-primary">{% trans "Browse Threads" %}</a>
+        <a href="{% url 'post-create' %}" class="btn">{% trans "Create a Post" %}</a>
+      </div>
+    {% else %}
+      <p>{% trans "Create an account to start participating in discussions." %}</p>
+      <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 1.5rem;">
+        <a href="{% url 'register-step1' %}" class="btn btn-primary">{% trans "Sign Up Now" %}</a>
+        <a href="{% url 'login' %}" class="btn">{% trans "Login" %}</a>
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

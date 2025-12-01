@@ -4,6 +4,7 @@ from django.views import generic
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import login
 from django.urls import reverse_lazy
 from django.http import JsonResponse, HttpResponseServerError
 from django.core.cache import cache
@@ -16,6 +17,7 @@ from django.db.models import Q
 # Create your views here.
 
 from .models import Category, Thread, Post, UserProfile
+from .forms import UserRegistrationForm, UserProfileRegistrationForm
 
 
 def index(request):
@@ -69,6 +71,11 @@ def thread_search(request):
     }
 
     return render(request, "catalog/search_results.html", context)
+
+
+def help_page(request):
+    """View function for help page."""
+    return render(request, 'catalog/help.html')
 
 
 class CategoryListView(generic.ListView):
@@ -194,7 +201,7 @@ class UserListView(LoginRequiredMixin, UserPassesTestMixin, generic.ListView):
     """
     model = User
     template_name = 'catalog/user_list.html'
-    paginate_by = 1
+    paginate_by = 5
     # When the test fails, redirect to the login page instead of raising 403
     # (AccessMixin.handle_no_permission will redirect to login when raise_exception is False)
     raise_exception = False
@@ -291,4 +298,93 @@ def post_bulk_delete(request):
             messages.warning(request, 'No posts selected for deletion.')
     
     return redirect('my-posts')
+
+
+def register_step1(request):
+    """Step 1: Create user account."""
+    if request.user.is_authenticated:
+        return redirect('index')
+    
+    if request.method == 'POST':
+        form = UserRegistrationForm(request.POST)
+        if form.is_valid():
+            # Save the user
+            user = form.save()
+            
+            # Automatically create an empty UserProfile for this user
+            UserProfile.objects.create(user=user)
+            
+            # Store user ID in session for step 2
+            request.session['registration_user_id'] = user.id
+            
+            # Redirect to step 2
+            return redirect('register-step2')
+    else:
+        form = UserRegistrationForm()
+    
+    return render(request, 'registration/register_step1.html', {'form': form})
+
+
+def register_step2(request):
+    """Step 2: Update user profile details."""
+    # Check if user came from step 1
+    user_id = request.session.get('registration_user_id')
+    if not user_id:
+        messages.error(request, 'Please complete step 1 first.')
+        return redirect('register-step1')
+    
+    try:
+        user = User.objects.get(id=user_id)
+    except User.DoesNotExist:
+        messages.error(request, 'Invalid registration session.')
+        return redirect('register-step1')
+    
+    # Get the user's profile (should always exist now)
+    try:
+        profile = user.profile
+    except UserProfile.DoesNotExist:
+        # Fallback: create profile if it doesn't exist for some reason
+        profile = UserProfile.objects.create(user=user)
+    
+    if request.method == 'POST':
+        form = UserProfileRegistrationForm(request.POST, instance=profile)
+        if form.is_valid():
+            # Update the profile with user's input
+            form.save()
+            
+            # Log the user in
+            login(request, user)
+            
+            # Clear the session
+            del request.session['registration_user_id']
+            
+            messages.success(request, f'Welcome {user.username}! Your account has been created successfully.')
+            return redirect('index')
+    else:
+        # Pre-populate form with existing profile data (will be empty fields)
+        form = UserProfileRegistrationForm(instance=profile)
+    
+    context = {
+        'form': form,
+        'username': user.username,
+    }
+    return render(request, 'registration/register_step2.html', context)
+
+
+def register_skip(request):
+    """Allow users to skip step 2 and complete their profile later."""
+    if request.method == 'POST':
+        user_id = request.session.get('registration_user_id')
+        if user_id:
+            try:
+                user = User.objects.get(id=user_id)
+                # Log the user in
+                login(request, user)
+                # Clear the session
+                del request.session['registration_user_id']
+                messages.info(request, f'Welcome {user.username}! You can complete your profile anytime from your profile page.')
+            except User.DoesNotExist:
+                pass
+    
+    return redirect('index')
 
