@@ -14,9 +14,17 @@
   <!-- Add additional CSS in static file -->
   {% load static %}
   <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+  <script>
+    // Apply dark mode immediately before body renders to prevent flash
+    (function() {
+      if (sessionStorage.getItem('darkMode') === 'enabled') {
+        document.documentElement.classList.add('dark-mode-loading');
+      }
+    })();
+  </script>
 </head>
 
-<body>
+<body class="dark-mode-loading">
   {# Language selector - fixed position #}
   <div style="position: fixed; left: 1rem; top: 0.5rem; font-size: 0.9rem; z-index: 10000;">
     {% block language_selector %}
@@ -43,7 +51,25 @@
   <header class="main-header">
     <div class="container-fluid">
       <nav class="nav-container">
-        <a href="{% url 'index' %}" class="nav-brand">{% trans "Forum" %}</a>
+        <a href="{% url 'index' %}" class="nav-brand">
+          {% trans "Forum" %}
+          <button id="dark-mode-toggle" class="dark-mode-toggle" aria-label="Toggle dark mode">
+            <svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="5"/>
+              <line x1="12" y1="1" x2="12" y2="3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <line x1="12" y1="21" x2="12" y2="23" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <line x1="1" y1="12" x2="3" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <line x1="21" y1="12" x2="23" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="display: none;">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            </svg>
+          </button>
+        </a>
 
         {# Search Form in Header #}
         <form action="{% url 'thread-search' %}" method="get" class="header-search-form">
@@ -75,6 +101,54 @@
       </nav>
     </div>
   </header>
+
+  <script>
+  // Dark Mode Toggle
+  (function() {
+    const toggle = document.getElementById('dark-mode-toggle');
+    const sunIcon = document.getElementById('sun-icon');
+    const moonIcon = document.getElementById('moon-icon');
+    const body = document.body;
+
+    // Check for saved preference in sessionStorage
+    const savedMode = sessionStorage.getItem('darkMode');
+    
+    // Apply saved preference or default to light mode
+    if (savedMode === 'enabled') {
+      body.classList.add('dark-mode');
+      sunIcon.style.display = 'none';
+      moonIcon.style.display = 'block';
+    }
+    
+    // Remove loading class after applying correct mode
+    body.classList.remove('dark-mode-loading');
+
+    // Toggle dark mode on button click
+    toggle.addEventListener('click', function(e) {
+      e.preventDefault();
+      
+      // Add transitioning class to enable smooth color changes
+      body.classList.add('dark-mode-transitioning');
+      
+      body.classList.toggle('dark-mode');
+      
+      if (body.classList.contains('dark-mode')) {
+        sessionStorage.setItem('darkMode', 'enabled');
+        sunIcon.style.display = 'none';
+        moonIcon.style.display = 'block';
+      } else {
+        sessionStorage.setItem('darkMode', 'disabled');
+        sunIcon.style.display = 'block';
+        moonIcon.style.display = 'none';
+      }
+      
+      // Remove transitioning class after transition completes
+      setTimeout(function() {
+        body.classList.remove('dark-mode-transitioning');
+      }, 300);
+    });
+  })();
+  </script>
 
   <script>
   (function(){

@@ -1,3 +1,18 @@
+/* ===== Disable all transitions by default ===== */
+*,
+*::before,
+*::after {
+  transition: none !important;
+}
+
+/* ===== Enable smooth color transitions ONLY when toggling dark mode ===== */
+body.dark-mode-transitioning,
+body.dark-mode-transitioning *,
+body.dark-mode-transitioning *::before,
+body.dark-mode-transitioning *::after {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, fill 0.3s ease !important;
+}
+
 /* ===== CSS Variables for Consistent Styling ===== */
 :root {
   --primary-color: #0d6efd;
@@ -8,26 +23,120 @@
   --text-muted: #6c757d;
   --border-color: #dee2e6;
   --bg-light: #f8f9fa;
+  --bg-color: #fff;
   --spacing-unit: 1rem;
   --border-radius: 0.375rem;
-  --transition: all 0.2s ease;
+}
+
+/* ===== Dark Mode Variables ===== */
+body.dark-mode {
+  --primary-color: #4a9eff;
+  --primary-hover: #6db0ff;
+  --secondary-color: #adb5bd;
+  --success-color: #28a745;
+  --text-color: #e9ecef;
+  --text-muted: #adb5bd;
+  --border-color: #495057;
+  --bg-light: #2d3238;
+  --bg-color: #1a1d23;
+}
+
+body.dark-mode {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+body.dark-mode .main-header {
+  background-color: var(--bg-color);
+  border-bottom-color: var(--border-color);
+}
+
+body.dark-mode .search-input,
+body.dark-mode .form-control,
+body.dark-mode input[type="text"],
+body.dark-mode input[type="password"],
+body.dark-mode input[type="email"],
+body.dark-mode input[type="url"],
+body.dark-mode input[type="number"],
+body.dark-mode textarea,
+body.dark-mode select {
+  background-color: var(--bg-light);
+  color: var(--text-color);
+  border-color: var(--border-color);
+}
+
+body.dark-mode .btn {
+  background-color: var(--bg-light);
+  color: var(--text-color);
+  border-color: var(--border-color);
+}
+
+body.dark-mode .nav-links a:hover,
+body.dark-mode .nav-links button:hover {
+  background-color: var(--bg-light);
+}
+
+body.dark-mode .page-links a {
+  background-color: var(--bg-light);
+  color: var(--text-color);
+}
+
+body.dark-mode .profile-edit-card,
+body.dark-mode .edit-user-banner {
+  background-color: var(--bg-light);
+  border-color: var(--border-color);
+}
+
+/* Dark mode styles for post cards - softer colors for easier reading */
+body.dark-mode .card {
+  background-color: #2a2d35;
+  border-color: var(--border-color);
+  color: var(--text-color);
+}
+
+body.dark-mode .card-header {
+  background-color: #232630;
+  border-bottom-color: var(--border-color);
+  color: var(--text-color);
+}
+
+body.dark-mode .card-body {
+  background-color: #2a2d35;
+  color: #d4d7dd;
+}
+
+body.dark-mode .card-text {
+  color: #d4d7dd;
+}
+
+body.dark-mode .list-group-item {
+  background-color: #2a2d35;
+  border-color: var(--border-color);
+  color: var(--text-color);
+}
+
+/* Keep world clock always light colored regardless of dark mode */
+#world-clock {
+  background: rgba(255, 255, 255, 0.9) !important;
+  color: #212529 !important;
 }
 
 /* ===== Global Styles ===== */
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   color: var(--text-color);
-  background-color: #fff;
+  background-color: var(--bg-color);
 }
 
 /* ===== Header Navigation ===== */
 .main-header {
-  background-color: #fff;
+  background-color: var(--bg-color);
   border-bottom: 2px solid var(--border-color);
   padding: var(--spacing-unit) 0;
-  margin-top: 3rem; /* Space for language selector and clock */
+  margin-top: 3rem;
+  /* Space for language selector and clock */
   margin-bottom: var(--spacing-unit);
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .nav-container {
@@ -43,9 +152,37 @@ body {
   font-weight: 600;
   color: var(--primary-color);
   text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
 }
 
 .nav-brand:hover {
+  color: var(--primary-hover);
+}
+
+/* Dark Mode Toggle */
+.dark-mode-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+}
+
+.dark-mode-toggle:hover {
+  background-color: var(--bg-light);
+}
+
+.dark-mode-toggle svg {
+  width: 20px;
+  height: 20px;
+  fill: var(--text-color);
   color: var(--primary-hover);
 }
 
@@ -65,7 +202,7 @@ body {
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
   font-size: 0.95rem;
-  transition: var(--transition);
+
 }
 
 .search-input:focus {
@@ -82,7 +219,7 @@ body {
   border-radius: var(--border-radius);
   font-size: 0.95rem;
   cursor: pointer;
-  transition: var(--transition);
+
   white-space: nowrap;
 }
 
@@ -107,7 +244,7 @@ body {
   border: none;
   background: transparent;
   color: var(--text-color);
-  transition: var(--transition);
+
   cursor: pointer;
   font-size: 0.95rem;
 }
@@ -149,7 +286,7 @@ body {
   color: var(--text-color);
   text-decoration: none;
   display: inline-block;
-  transition: var(--transition);
+
   cursor: pointer;
   font-size: 0.95rem;
 }
@@ -186,7 +323,7 @@ body {
 .sidebar-nav a {
   color: var(--text-color);
   text-decoration: none;
-  transition: var(--transition);
+
   display: block;
   padding: 0.25rem 0;
 }
@@ -219,7 +356,9 @@ body {
   padding: var(--spacing-unit) 0;
 }
 
-h1, h2, h3 {
+h1,
+h2,
+h3 {
   color: var(--text-color);
   margin-bottom: var(--spacing-unit);
 }
@@ -247,7 +386,7 @@ ul li {
 a {
   color: var(--primary-color);
   text-decoration: none;
-  transition: var(--transition);
+
 }
 
 a:hover {
@@ -358,7 +497,7 @@ a:hover {
   color: var(--text-muted);
   text-decoration: none;
   font-size: 0.95rem;
-  transition: var(--transition);
+
 }
 
 .btn-text:hover {
@@ -507,7 +646,7 @@ select {
   font-size: 0.95rem;
   color: var(--text-color);
   background-color: #fff;
-  transition: var(--transition);
+
 }
 
 .form-control:focus,
