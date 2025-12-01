@@ -202,6 +202,7 @@ class UserListView(LoginRequiredMixin, UserPassesTestMixin, generic.ListView):
     model = User
     template_name = 'catalog/user_list.html'
     paginate_by = 5
+    ordering = ['username']  # Order by username alphabetically
     # When the test fails, redirect to the login page instead of raising 403
     # (AccessMixin.handle_no_permission will redirect to login when raise_exception is False)
     raise_exception = False
