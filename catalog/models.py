@@ -104,6 +104,7 @@ class UserProfile(models.Model):
     website = models.URLField(blank=True)
     joined_date = models.DateTimeField(auto_now_add=True)
     avatar = models.CharField(max_length=500, blank=True, null=True, help_text="Avatar URL")
+    dark_mode = models.BooleanField(default=False, help_text="Enable dark mode theme")
     
     def __str__(self):
         """String for representing the Model object."""

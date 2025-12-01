@@ -389,3 +389,22 @@ def register_skip(request):
     
     return redirect('index')
 
+
+@login_required
+def toggle_dark_mode(request):
+    """Toggle dark mode preference for authenticated users."""
+    if request.method == 'POST':
+        try:
+            profile = request.user.profile
+            # Toggle the dark mode setting
+            profile.dark_mode = not profile.dark_mode
+            profile.save(update_fields=['dark_mode'])
+            return JsonResponse({'dark_mode': profile.dark_mode})
+        except UserProfile.DoesNotExist:
+            # Create profile if it doesn't exist
+            profile = UserProfile.objects.create(user=request.user, dark_mode=True)
+            return JsonResponse({'dark_mode': profile.dark_mode})
+    
+    return JsonResponse({'error': 'Invalid request'}, status=400)
+
+

@@ -17,14 +17,19 @@
   <script>
     // Apply dark mode immediately before body renders to prevent flash
     (function() {
-      if (sessionStorage.getItem('darkMode') === 'enabled') {
+      const userDarkMode = document.documentElement.getAttribute('data-user-dark-mode');
+      if (userDarkMode === 'true' || sessionStorage.getItem('darkMode') === 'enabled') {
         document.documentElement.classList.add('dark-mode-loading');
+        sessionStorage.setItem('darkMode', 'enabled');
       }
     })();
   </script>
 </head>
 
-<body class="dark-mode-loading">
+<body class="dark-mode-loading" 
+      data-user-authenticated="{% if user.is_authenticated %}true{% else %}false{% endif %}"
+      data-user-dark-mode="{% if user.is_authenticated and user.profile.dark_mode %}true{% else %}false{% endif %}"
+      data-toggle-url="{% url 'toggle-dark-mode' %}">
   {# Language selector - fixed position #}
   <div style="position: fixed; left: 1rem; top: 0.5rem; font-size: 0.9rem; z-index: 10000;">
     {% block language_selector %}
@@ -111,9 +116,27 @@
     const sunIcon = document.getElementById('sun-icon');
     const moonIcon = document.getElementById('moon-icon');
     const body = document.body;
+    const isAuthenticated = body.getAttribute('data-user-authenticated') === 'true';
+    const userDarkMode = body.getAttribute('data-user-dark-mode') === 'true';
 
-    // Check for saved preference in sessionStorage
-    const savedMode = sessionStorage.getItem('darkMode');
+    // Helper function to get CSRF cookie
+    function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    }
+
+    // Check for saved preference
+    const savedMode = userDarkMode ? 'enabled' : sessionStorage.getItem('darkMode');
     
     // Apply saved preference or default to light mode
     if (savedMode === 'enabled') {
@@ -134,7 +157,9 @@
       
       body.classList.toggle('dark-mode');
       
-      if (body.classList.contains('dark-mode')) {
+      const isDarkMode = body.classList.contains('dark-mode');
+      
+      if (isDarkMode) {
         sessionStorage.setItem('darkMode', 'enabled');
         sunIcon.style.display = 'none';
         moonIcon.style.display = 'block';
@@ -142,6 +167,20 @@
         sessionStorage.setItem('darkMode', 'disabled');
         sunIcon.style.display = 'block';
         moonIcon.style.display = 'none';
+      }
+      
+      // Save preference to database for authenticated users
+      if (isAuthenticated) {
+        const csrftoken = getCookie('csrftoken');
+        const toggleUrl = body.getAttribute('data-toggle-url');
+        
+        fetch(toggleUrl, {
+          method: 'POST',
+          headers: {
+            'X-CSRFToken': csrftoken,
+            'Content-Type': 'application/json',
+          },
+        });
       }
       
       // Remove transitioning class after transition completes
