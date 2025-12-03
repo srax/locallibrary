@@ -1,0 +1,139 @@
+{% extends "base_generic.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Chat with" %} {{ other_user.username }}{% endblock %}
+
+{% block content %}
+<div class="chat-container">
+  <div class="chat-header">
+    <a href="{% url 'chat:list' %}" class="chat-back-btn" title="{% trans 'Back to messages' %}">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+    </a>
+    <div class="chat-header-info">
+      <h4>{{ other_user.username }}</h4>
+      <span class="connection-status" id="connection-status">{% trans "Connecting..." %}</span>
+    </div>
+  </div>
+
+  <div class="chat-messages" id="chat-messages">
+    <!-- Messages will be loaded here via WebSocket -->
+  </div>
+
+  <form class="chat-form" id="chat-form">
+    <input type="text" id="chat-input" placeholder="{% trans 'Type a message...' %}" autocomplete="off" maxlength="2000">
+    <button type="submit" id="chat-submit">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="22" y1="2" x2="11" y2="13"></line>
+        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+      </svg>
+    </button>
+  </form>
+</div>
+
+<script>
+  const conversationId = {{ conversation.id }};
+  const currentUserId = {{ request.user.id }};
+  const messagesContainer = document.getElementById('chat-messages');
+  const chatForm = document.getElementById('chat-form');
+  const chatInput = document.getElementById('chat-input');
+  const connectionStatus = document.getElementById('connection-status');
+
+  let socket = null;
+  let reconnectAttempts = 0;
+  const maxReconnectAttempts = 5;
+  const baseReconnectDelay = 1000;
+
+  function connectWebSocket() {
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    const wsUrl = `${protocol}//${window.location.host}/ws/chat/${conversationId}/`;
+
+    socket = new WebSocket(wsUrl);
+
+    socket.onopen = function(e) {
+      console.log('WebSocket connected');
+      connectionStatus.textContent = '{% trans "Connected" %}';
+      connectionStatus.classList.remove('disconnected');
+      connectionStatus.classList.add('connected');
+      reconnectAttempts = 0;
+    };
+
+    socket.onmessage = function(e) {
+      const data = JSON.parse(e.data);
+
+      if (data.type === 'history') {
+        // Load chat history
+        messagesContainer.innerHTML = '';
+        data.messages.forEach(msg => renderMessage(msg));
+        scrollToBottom();
+      } else if (data.type === 'message') {
+        // New message received
+        renderMessage(data.message);
+        scrollToBottom();
+      }
+    };
+
+    socket.onclose = function(e) {
+      console.log('WebSocket closed');
+      connectionStatus.textContent = '{% trans "Disconnected" %}';
+      connectionStatus.classList.remove('connected');
+      connectionStatus.classList.add('disconnected');
+
+      // Attempt to reconnect with exponential backoff
+      if (reconnectAttempts < maxReconnectAttempts) {
+        const delay = baseReconnectDelay * Math.pow(2, reconnectAttempts);
+        reconnectAttempts++;
+        console.log(`Reconnecting in ${delay}ms (attempt ${reconnectAttempts})`);
+        connectionStatus.textContent = `{% trans "Reconnecting..." %}`;
+        setTimeout(connectWebSocket, delay);
+      }
+    };
+
+    socket.onerror = function(e) {
+      console.error('WebSocket error:', e);
+    };
+  }
+
+  function renderMessage(msg) {
+    const messageDiv = document.createElement('div');
+    const isSent = msg.sender_id === currentUserId;
+    messageDiv.className = `message ${isSent ? 'sent' : 'received'}`;
+    messageDiv.innerHTML = `
+      <div class="message-content">${escapeHtml(msg.content)}</div>
+      <div class="message-meta">
+        <span class="message-sender">${escapeHtml(msg.sender)}</span>
+        <span class="message-time">${msg.timestamp}</span>
+      </div>
+    `;
+    messagesContainer.appendChild(messageDiv);
+  }
+
+  function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  function scrollToBottom() {
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+  }
+
+  chatForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const message = chatInput.value.trim();
+
+    if (message && socket && socket.readyState === WebSocket.OPEN) {
+      socket.send(JSON.stringify({ message: message }));
+      chatInput.value = '';
+    }
+  });
+
+  // Focus input on page load
+  chatInput.focus();
+
+  // Connect to WebSocket
+  connectWebSocket();
+</script>
+{% endblock %}

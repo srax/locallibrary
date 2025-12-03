@@ -26,6 +26,7 @@ urlpatterns = [
 from django.urls import include
 urlpatterns += [
     path('catalog/', include('catalog.urls')),
+    path('chat/', include('chat.urls')),
 ]
 
 # Add URL maps to redirect the base URL to our application

@@ -1,0 +1,83 @@
+{% extends "base_generic.html" %}
+{% load i18n %}
+
+{% block title %}<title>{% trans "Notifications" %} - {% trans "Forum" %}</title>{% endblock %}
+
+{% block content %}
+<div class="notifications-page">
+  <div class="notifications-header">
+    <h1>{% trans "Notifications" %}</h1>
+    {% if notifications %}
+    <form method="post" action="{% url 'notification-mark-all-read' %}">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-primary">{% trans "Mark all as read" %}</button>
+    </form>
+    {% endif %}
+  </div>
+
+  {% if notifications %}
+  <div class="notifications-list-page">
+    {% for notification in notifications %}
+    <div class="notification-card {% if not notification.is_read %}unread{% endif %}">
+      <div class="notification-content">
+        <div class="notification-icon">
+          {% if notification.is_read %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+          </svg>
+          {% else %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+          {% endif %}
+        </div>
+        <div class="notification-details">
+          <p class="notification-message">{{ notification.message }}</p>
+          <p class="notification-meta">
+            <span class="notification-thread">
+              {% trans "in" %} <a href="{{ notification.post.thread.get_absolute_url }}">{{ notification.post.thread.title }}</a>
+            </span>
+            <span class="notification-time">{{ notification.created_date|timesince }} {% trans "ago" %}</span>
+          </p>
+        </div>
+      </div>
+      <div class="notification-actions">
+        <a href="{% url 'notification-mark-read' notification.id %}" class="btn btn-sm btn-primary">{% trans "View" %}</a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  {% block pagination %}
+  {% if is_paginated %}
+  <div class="pagination">
+    <span class="page-links">
+      {% if page_obj.has_previous %}
+      <a href="{{ request.path }}?page={{ page_obj.previous_page_number }}">{% trans "previous" %}</a>
+      {% endif %}
+      <span class="page-current">
+        {% trans "Page" %} {{ page_obj.number }} {% trans "of" %} {{ page_obj.paginator.num_pages }}.
+      </span>
+      {% if page_obj.has_next %}
+      <a href="{{ request.path }}?page={{ page_obj.next_page_number }}">{% trans "next" %}</a>
+      {% endif %}
+    </span>
+  </div>
+  {% endif %}
+  {% endblock %}
+
+  {% else %}
+  <div class="notifications-empty">
+    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+      <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+      <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+    </svg>
+    <h3>{% trans "No notifications yet" %}</h3>
+    <p>{% trans "When someone posts in a thread you're participating in, you'll see it here." %}</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -22,4 +22,8 @@ urlpatterns = [
     path('register/step2/', views.register_step2, name='register-step2'),
     path('register/skip/', views.register_skip, name='register-skip'),
     path('toggle-dark-mode/', views.toggle_dark_mode, name='toggle-dark-mode'),
+    # Notification URLs
+    path('notifications/', views.NotificationListView.as_view(), name='notifications'),
+    path('notifications/mark-read/<int:pk>/', views.notification_mark_read, name='notification-mark-read'),
+    path('notifications/mark-all-read/', views.notification_mark_all_read, name='notification-mark-all-read'),
 ]

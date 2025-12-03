@@ -14,6 +14,13 @@
           </div>
           <div>
             <a class="btn btn-sm btn-outline-primary" href="{{ user.get_absolute_url }}">{% trans "View profile" %}</a>
+            {% if request.user.is_authenticated and request.user != user %}
+            <a class="btn btn-sm btn-outline-secondary dm-btn-sm" href="{% url 'chat:start' user.id %}" title="{% trans 'Send DM' %}">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+              </svg>
+            </a>
+            {% endif %}
           </div>
         </li>
       {% endfor %}

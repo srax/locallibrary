@@ -2,7 +2,7 @@ from django.contrib import admin
 
 # Register your models here.
 
-from .models import Category, Thread, Post, UserProfile
+from .models import Category, Thread, Post, UserProfile, Notification
 
 
 # Register Category
@@ -46,3 +46,13 @@ class UserProfileAdmin(admin.ModelAdmin):
     list_display = ('user', 'location', 'joined_date', 'post_count', 'thread_count')
     search_fields = ['user__username', 'location']
     readonly_fields = ['joined_date']
+
+
+# Register Notification
+@admin.register(Notification)
+class NotificationAdmin(admin.ModelAdmin):
+    list_display = ('recipient', 'actor', 'notification_type', 'is_read', 'created_date')
+    list_filter = ('notification_type', 'is_read', 'created_date')
+    search_fields = ['recipient__username', 'actor__username', 'message']
+    readonly_fields = ['created_date']
+    raw_id_fields = ['recipient', 'actor', 'post']

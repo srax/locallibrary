@@ -54,13 +54,16 @@ CSRF_TRUSTED_ORIGINS = [
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',  # Must be first for ASGI support
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'channels',
     'catalog.apps.CatalogConfig',
+    'chat',
 ]
 
 MIDDLEWARE = [
@@ -89,12 +92,21 @@ TEMPLATES = [
                 'django.template.context_processors.i18n',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'catalog.context_processors.notifications',
             ],
         },
     },
 ]
 
 WSGI_APPLICATION = 'locallibrary.wsgi.application'
+ASGI_APPLICATION = 'locallibrary.asgi.application'
+
+# Channel Layers for WebSocket support
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    }
+}
 
 
 # Database

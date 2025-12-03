@@ -1,0 +1,51 @@
+{% extends "base_generic.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Messages" %}{% endblock %}
+
+{% block content %}
+<div class="messages-page">
+  <h1>{% trans "Messages" %}</h1>
+
+  {% if conversations %}
+    <div class="conversation-list">
+      {% for item in conversations %}
+        <a href="{{ item.conversation.get_absolute_url }}" class="conversation-item {% if item.unread_count > 0 %}unread{% endif %}">
+          <div class="conversation-avatar">
+            {{ item.other_user.username|slice:":1"|upper }}
+          </div>
+          <div class="conversation-info">
+            <div class="conversation-header">
+              <span class="conversation-username">{{ item.other_user.username }}</span>
+              {% if item.last_message %}
+                <span class="conversation-time">{{ item.last_message.timestamp|date:"M d" }}</span>
+              {% endif %}
+            </div>
+            <div class="conversation-preview">
+              {% if item.last_message %}
+                {% if item.last_message.sender == request.user %}
+                  <span class="preview-you">{% trans "You:" %}</span>
+                {% endif %}
+                {{ item.last_message.content|truncatechars:50 }}
+              {% else %}
+                <em>{% trans "No messages yet" %}</em>
+              {% endif %}
+            </div>
+          </div>
+          {% if item.unread_count > 0 %}
+            <span class="conversation-badge">{{ item.unread_count }}</span>
+          {% endif %}
+        </a>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="no-conversations">
+      <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+      </svg>
+      <p>{% trans "No conversations yet" %}</p>
+      <p class="text-muted">{% trans "Start a conversation by clicking the DM button on a user's profile or post" %}</p>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

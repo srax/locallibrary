@@ -133,3 +133,51 @@ def _user_get_absolute_url(self):
 
 # Attach the helper to the auth User model
 User.add_to_class('get_absolute_url', _user_get_absolute_url)
+
+
+class Notification(models.Model):
+    """Model representing a user notification."""
+    NOTIFICATION_TYPES = [
+        ('new_post', 'New Post in Thread'),
+    ]
+
+    recipient = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='notifications',
+        help_text="User who receives this notification"
+    )
+    notification_type = models.CharField(
+        max_length=20,
+        choices=NOTIFICATION_TYPES,
+        default='new_post'
+    )
+    post = models.ForeignKey(
+        Post,
+        on_delete=models.CASCADE,
+        related_name='notifications',
+        help_text="The post that triggered this notification"
+    )
+    actor = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='triggered_notifications',
+        help_text="User who performed the action"
+    )
+    message = models.CharField(max_length=255, help_text="Notification message text")
+    is_read = models.BooleanField(default=False)
+    created_date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_date']
+        indexes = [
+            models.Index(fields=['recipient', 'is_read']),
+            models.Index(fields=['recipient', '-created_date']),
+        ]
+
+    def __str__(self):
+        return f"Notification for {self.recipient.username}: {self.message[:50]}"
+
+    def get_absolute_url(self):
+        """Return URL to the post with anchor to specific post."""
+        return f"{self.post.thread.get_absolute_url()}#post-{self.post.id}"

@@ -20,9 +20,17 @@
   <div class="posts-container">
     {% if thread.post_set.all %}
       {% for post in thread.post_set.all %}
-        <div class="card mb-3">
+        <div class="card mb-3" id="post-{{ post.id }}">
           <div class="card-header">
-            <strong><a href="{{ post.author.get_absolute_url }}">{{ post.author.username }}</a></strong> • {{ post.created_date }}
+            <strong><a href="{{ post.author.get_absolute_url }}">{{ post.author.username }}</a></strong>
+            {% if user.is_authenticated and user != post.author %}
+            <a href="{% url 'chat:start' post.author.id %}" class="dm-link" title="{% trans 'Send DM' %}">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+              </svg>
+            </a>
+            {% endif %}
+            • {{ post.created_date }}
             {% if post.is_edited %}<em>({% trans "edited" %})</em>{% endif %}
           </div>
           <div class="card-body">

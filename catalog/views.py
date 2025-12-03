@@ -1,5 +1,5 @@
 from asyncio.log import logger
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views import generic
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -16,7 +16,7 @@ from django.db.models import Q
 
 # Create your views here.
 
-from .models import Category, Thread, Post, UserProfile
+from .models import Category, Thread, Post, UserProfile, Notification
 from .forms import UserRegistrationForm, UserProfileRegistrationForm
 
 
@@ -408,3 +408,47 @@ def toggle_dark_mode(request):
     return JsonResponse({'error': 'Invalid request'}, status=400)
 
 
+# ============================================
+# NOTIFICATION VIEWS
+# ============================================
+
+class NotificationListView(LoginRequiredMixin, generic.ListView):
+    """Display all notifications for the current user."""
+    model = Notification
+    template_name = 'catalog/notification_list.html'
+    context_object_name = 'notifications'
+    paginate_by = 20
+
+    def get_queryset(self):
+        return Notification.objects.filter(
+            recipient=self.request.user
+        ).select_related('actor', 'post', 'post__thread')
+
+
+@login_required
+def notification_mark_read(request, pk):
+    """Mark a single notification as read and redirect to the post."""
+    notification = get_object_or_404(
+        Notification,
+        pk=pk,
+        recipient=request.user
+    )
+    notification.is_read = True
+    notification.save(update_fields=['is_read'])
+
+    # Redirect to the notification target (the post)
+    return redirect(notification.get_absolute_url())
+
+
+@login_required
+def notification_mark_all_read(request):
+    """Mark all notifications as read for the current user."""
+    if request.method == 'POST':
+        updated = Notification.objects.filter(
+            recipient=request.user,
+            is_read=False
+        ).update(is_read=True)
+
+        messages.success(request, f'Marked {updated} notification(s) as read.')
+
+    return redirect('notifications')
