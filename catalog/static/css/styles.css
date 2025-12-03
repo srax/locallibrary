@@ -1104,6 +1104,7 @@ body.dark-mode .notification-link:hover {
   background-color: var(--bg-light);
 }
 
+
 /* ===== Responsive Notification Styles ===== */
 @media (max-width: 768px) {
   .notification-dropdown {
