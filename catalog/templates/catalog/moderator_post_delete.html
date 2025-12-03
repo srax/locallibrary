@@ -1,0 +1,33 @@
+{% extends "catalog/moderator_base.html" %}
+{% load i18n %}
+
+{% block moderator_content %}
+<div class="moderator-dashboard">
+    <h1 class="moderator-title">
+        <span class="moderator-badge">🛡️ MODERATOR</span>
+        Delete Post
+    </h1>
+    
+    <div class="moderator-section">
+        <h2>Are you sure you want to delete this post?</h2>
+        
+        <div style="background: #f8f9fa; padding: 15px; border-radius: 4px; margin: 20px 0;">
+            <p><strong>Author:</strong> {{ object.author.username }}</p>
+            <p><strong>Thread:</strong> {{ object.thread.title }}</p>
+            <p><strong>Content:</strong></p>
+            <p>{{ object.content }}</p>
+            <p><strong>Posted:</strong> {{ object.created_date|date:"Y-m-d H:i" }}</p>
+        </div>
+        
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn-danger-small" style="padding: 10px 20px; font-size: 1em;">
+                Yes, Delete Post
+            </button>
+            <a href="{% url 'moderator-dashboard' %}" class="btn-moderator" style="margin-left: 10px;">
+                Cancel
+            </a>
+        </form>
+    </div>
+</div>
+{% endblock %}

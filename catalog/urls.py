@@ -28,4 +28,9 @@ urlpatterns = [
     path('notifications/mark-all-read/', views.notification_mark_all_read, name='notification-mark-all-read'),
     # AI Summarize
     path('thread/<int:pk>/summarize/', views.summarize_thread, name='thread-summarize'),
+    # Moderator URLs
+    path('moderator/', views.ModeratorDashboardView.as_view(), name='moderator-dashboard'),
+    path('moderator/posts/', views.ModeratorPostListView.as_view(), name='moderator-posts'),
+    path('moderator/post/<int:pk>/delete/', views.ModeratorPostDeleteView.as_view(), name='moderator-post-delete'),
+    path('moderator/bulk-delete/', views.moderator_bulk_delete, name='moderator-bulk-delete'),
 ]

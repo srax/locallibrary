@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views import generic
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth import login
 from django.urls import reverse_lazy
 from django.http import JsonResponse, HttpResponseServerError
@@ -18,6 +18,7 @@ from django.db.models import Q
 
 from .models import Category, Thread, Post, UserProfile, Notification
 from .forms import UserRegistrationForm, UserProfileRegistrationForm
+from .mixins import ModeratorRequiredMixin, is_moderator
 
 
 def index(request):
@@ -509,3 +510,65 @@ def summarize_thread(request, pk):
 
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
+
+
+# ============================================
+# MODERATOR VIEWS
+# ============================================
+
+class ModeratorDashboardView(ModeratorRequiredMixin, generic.TemplateView):
+    """Main dashboard for moderators."""
+    template_name = 'catalog/moderator_dashboard.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        # Get recent posts for moderation
+        context['recent_posts'] = Post.objects.all().select_related('author', 'thread').order_by('-created_date')[:20]
+        
+        # Statistics
+        context['total_posts'] = Post.objects.count()
+        context['total_threads'] = Thread.objects.count()
+        context['total_users'] = User.objects.count()
+        
+        return context
+
+
+class ModeratorPostListView(ModeratorRequiredMixin, generic.ListView):
+    """List all posts for moderator review."""
+    model = Post
+    template_name = 'catalog/moderator_post_list.html'
+    context_object_name = 'posts'
+    paginate_by = 20
+    ordering = ['-created_date']
+    
+    def get_queryset(self):
+        return Post.objects.all().select_related('author', 'thread')
+
+
+class ModeratorPostDeleteView(ModeratorRequiredMixin, generic.DeleteView):
+    """Allow moderators to delete any post."""
+    model = Post
+    template_name = 'catalog/moderator_post_delete.html'
+    success_url = reverse_lazy('moderator-dashboard')
+    
+    def delete(self, request, *args, **kwargs):
+        messages.success(request, 'Post deleted successfully.')
+        return super().delete(request, *args, **kwargs)
+
+
+@login_required
+@user_passes_test(is_moderator)
+def moderator_bulk_delete(request):
+    """Delete multiple posts at once (moderator only)."""
+    if request.method == 'POST':
+        post_ids = request.POST.getlist('post_ids')
+        if post_ids:
+            posts_to_delete = Post.objects.filter(pk__in=post_ids)
+            count = posts_to_delete.count()
+            posts_to_delete.delete()
+            messages.success(request, f'Successfully deleted {count} post(s).')
+        else:
+            messages.warning(request, 'No posts selected for deletion.')
+    
+    return redirect('moderator-dashboard')
