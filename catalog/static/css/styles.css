@@ -1104,6 +1104,19 @@ body.dark-mode .notification-link:hover {
   background-color: var(--bg-light);
 }
 
+.header-icons {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; /* Mellanrum mellan ikonerna */
+}
+
+@media (max-width: 768px) {
+  .header-icons {
+    align-self: flex-start;
+    margin-top: 0.25rem;
+  }
+}
+
 
 /* ===== Responsive Notification Styles ===== */
 @media (max-width: 768px) {
