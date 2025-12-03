@@ -14,6 +14,7 @@
   <!-- Add additional CSS in static file -->
   {% load static %}
   <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/moderator.css' %}" />
   <script>
     // Apply dark mode immediately before body renders to prevent flash
     (function() {
@@ -82,8 +83,10 @@
           <button type="submit" class="search-btn">{% trans "Search" %}</button>
         </form>
 
-        {# Messages Icon - Only for authenticated users #}
-        {% if user.is_authenticated %}
+        {# Messages + Notifications - Only for authenticated users #}
+      {% if user.is_authenticated %}
+      <div class="header-icons">
+        {# Messages Icon #}
         <a href="{% url 'chat:list' %}" class="messages-icon" title="{% trans 'Messages' %}">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
@@ -92,10 +95,8 @@
           <span class="messages-badge">{{ unread_messages_count }}</span>
           {% endif %}
         </a>
-        {% endif %}
 
-        {# Notification Bell - Only for authenticated users #}
-        {% if user.is_authenticated %}
+        {# Notification Bell #}
         <div class="notification-wrapper" id="notification-wrapper">
           <button class="notification-bell" id="notification-bell" aria-label="{% trans 'Notifications' %}" aria-expanded="false">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -110,14 +111,6 @@
           <div class="notification-dropdown" id="notification-dropdown" aria-hidden="true">
             <div class="notification-header">
               <span class="notification-title">{% trans "Notifications" %}</span>
-              {% if recent_notifications %}
-              <form method="post" action="{% url 'notification-mark-all-read' %}" class="mark-all-form">
-                {% csrf_token %}
-                <button type="submit" class="mark-all-btn">{% trans "Mark all read" %}</button>
-              </form>
-              {% endif %}
-            </div>
-            <div class="notification-list" id="notification-list">
               {% if recent_notifications %}
                 {% for notification in recent_notifications %}
                 <div class="notification-item {% if not notification.is_read %}unread{% endif %}" data-id="{{ notification.id }}">
@@ -147,6 +140,11 @@
           <li><a href="{% url 'help' %}">{% trans "Help" %}</a></li>
           {% if user.is_authenticated %}
             <li><a href="{% url 'my-posts' %}">{% trans "My Posts" %}</a></li>
+            {% if is_moderator %}
+              <li><a href="{% url 'moderator-dashboard' %}" class="moderator-link">
+                🛡️ {% trans "Moderator Panel" %}
+              </a></li>
+            {% endif %}
             <li><a href="{{ user.get_absolute_url }}">{{ user.get_username }}</a></li>
             <li>
               <form id="logout-form-header" method="post" action="{% url 'logout' %}" style="display: inline;">
@@ -426,6 +424,11 @@
         <ul class="sidebar-nav">
           {% if user.is_authenticated %}
           <li><strong>{% trans "Welcome" %}, {{ user.get_username }}!</strong></li>
+          <li style="margin-top: 10px;">
+            <a href="{% url 'post-create' %}" class="btn btn-primary btn-sm" style="display: inline-block; padding: 8px 16px; text-decoration: none; border-radius: 4px;">
+              {% trans "Make Post" %}
+            </a>
+          </li>
           {% endif %}
         </ul>
       </div>
