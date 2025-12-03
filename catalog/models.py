@@ -105,6 +105,7 @@ class UserProfile(models.Model):
     joined_date = models.DateTimeField(auto_now_add=True)
     avatar = models.CharField(max_length=500, blank=True, null=True, help_text="Avatar URL")
     dark_mode = models.BooleanField(default=False, help_text="Enable dark mode theme")
+    is_moderator = models.BooleanField(default=False, help_text="User is a moderator")
     
     def __str__(self):
         """String for representing the Model object."""

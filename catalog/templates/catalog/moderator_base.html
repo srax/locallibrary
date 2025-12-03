@@ -1,0 +1,36 @@
+{% extends "base_generic.html" %}
+{% load i18n %}
+
+{% block title %}
+<title>{% trans "Moderator Panel" %} - {% trans "Forum" %}</title>
+{% endblock %}
+
+{% block sidebar %}
+<div class="col-sm-2 moderator-sidebar">
+    <ul class="sidebar-nav moderator-nav">
+        <li class="moderator-header">
+            <strong>🛡️ {% trans "Moderator Panel" %}</strong>
+        </li>
+        <li><a href="{% url 'moderator-dashboard' %}">{% trans "Dashboard" %}</a></li>
+        <li><a href="{% url 'moderator-posts' %}">{% trans "All Posts" %}</a></li>
+        <li><a href="{% url 'index' %}" class="back-to-forum">{% trans "← Back to Forum" %}</a></li>
+    </ul>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="moderator-container">
+    {% if messages %}
+    <div class="moderator-messages">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    {% block moderator_content %}
+    {% endblock %}
+</div>
+{% endblock %}

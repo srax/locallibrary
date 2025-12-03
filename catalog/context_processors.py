@@ -1,5 +1,6 @@
 from .models import Notification
 from chat.models import Message
+from .mixins import is_moderator
 
 
 def notifications(request):
@@ -42,3 +43,15 @@ def notifications(request):
         'recent_notifications': [],
         'unread_messages_count': 0,
     }
+
+
+def user_context(request):
+    """Add user-related context variables."""
+    context = {}
+    
+    if request.user.is_authenticated:
+        context['is_moderator'] = is_moderator(request.user)
+    else:
+        context['is_moderator'] = False
+    
+    return context
