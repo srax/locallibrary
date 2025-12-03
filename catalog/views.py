@@ -452,3 +452,60 @@ def notification_mark_all_read(request):
         messages.success(request, f'Marked {updated} notification(s) as read.')
 
     return redirect('notifications')
+
+
+# ============================================
+# AI SUMMARIZE VIEW
+# ============================================
+
+@login_required
+def summarize_thread(request, pk):
+    """Generate an AI summary of a thread using Claude."""
+    if request.method != 'POST':
+        return JsonResponse({'error': 'POST required'}, status=405)
+
+    thread = get_object_or_404(Thread, pk=pk)
+
+    # Gather thread info
+    posts = thread.post_set.select_related('author').order_by('created_date')
+
+    # Build the content to summarize
+    thread_content = f"Thread Title: {thread.title}\n"
+    thread_content += f"Category: {thread.category.name}\n"
+    thread_content += f"Author: {thread.author.username}\n"
+    thread_content += f"Created: {thread.created_date}\n\n"
+    thread_content += "Posts:\n"
+
+    for i, post in enumerate(posts[:20], 1):  # Limit to first 20 posts
+        author_name = post.author.username if post.author else 'Anonymous'
+        thread_content += f"\n--- Post {i} by {author_name} ---\n"
+        thread_content += post.content[:500]  # Limit each post to 500 chars
+        if len(post.content) > 500:
+            thread_content += "..."
+
+    try:
+        import anthropic
+
+        api_key = os.environ.get('ANTHROPIC_API_KEY')
+        if not api_key:
+            return JsonResponse({'error': 'AI service not configured'}, status=500)
+
+        client = anthropic.Anthropic(api_key=api_key)
+
+        message = client.messages.create(
+            model="claude-sonnet-4-20250514",
+            max_tokens=300,
+            messages=[
+                {
+                    "role": "user",
+                    "content": f"Please provide a brief, 2-3 sentence summary of what this forum thread is about. Focus on the main topic and key points discussed.\n\n{thread_content}"
+                }
+            ]
+        )
+
+        summary = message.content[0].text
+
+        return JsonResponse({'summary': summary})
+
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)

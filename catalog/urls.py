@@ -26,4 +26,6 @@ urlpatterns = [
     path('notifications/', views.NotificationListView.as_view(), name='notifications'),
     path('notifications/mark-read/<int:pk>/', views.notification_mark_read, name='notification-mark-read'),
     path('notifications/mark-all-read/', views.notification_mark_all_read, name='notification-mark-all-read'),
+    # AI Summarize
+    path('thread/<int:pk>/summarize/', views.summarize_thread, name='thread-summarize'),
 ]

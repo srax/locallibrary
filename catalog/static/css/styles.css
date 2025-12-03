@@ -1588,3 +1588,51 @@ body.dark-mode .chat-form input {
     font-size: 16px; /* Prevents zoom on iOS */
   }
 }
+
+/* ===== AI Summary Styles ===== */
+.ai-summary-section {
+  margin: 1rem 0;
+}
+
+.ai-summarize-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.ai-summarize-btn svg {
+  stroke: currentColor;
+}
+
+.ai-summary-result {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: linear-gradient(135deg, rgba(13, 110, 253, 0.05) 0%, rgba(102, 16, 242, 0.05) 100%);
+  border: 1px solid rgba(13, 110, 253, 0.2);
+  border-radius: var(--border-radius);
+  border-left: 4px solid var(--primary-color);
+}
+
+.ai-summary-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  color: var(--primary-color);
+}
+
+.ai-summary-header svg {
+  stroke: var(--primary-color);
+}
+
+.ai-summary-text {
+  margin: 0;
+  line-height: 1.6;
+  color: var(--text-color);
+}
+
+/* Dark mode AI Summary */
+body.dark-mode .ai-summary-result {
+  background: linear-gradient(135deg, rgba(74, 158, 255, 0.1) 0%, rgba(138, 43, 226, 0.1) 100%);
+  border-color: rgba(74, 158, 255, 0.3);
+}
