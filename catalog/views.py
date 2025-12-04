@@ -16,9 +16,9 @@ from django.db.models import Q
 
 # Create your views here.
 
-from .models import Category, Thread, Post, UserProfile, Notification
+from .models import Category, Thread, Post, UserProfile, Notification, PostLike
 from .forms import UserRegistrationForm, UserProfileRegistrationForm
-from .mixins import ModeratorRequiredMixin, is_moderator
+from .mixins import ModeratorRequiredMixin, is_moderator, StaffRequiredMixin, is_staff_member
 
 
 def index(request):
@@ -102,7 +102,34 @@ class ThreadDetailView(generic.DetailView):
         thread = self.get_object()
         thread.views += 1
         thread.save(update_fields=['views'])
+        
+        # Add liked posts information for the current user
+        if self.request.user.is_authenticated:
+            liked_post_ids = PostLike.objects.filter(
+                user=self.request.user,
+                post__thread=thread
+            ).values_list('post_id', flat=True)
+            context['liked_post_ids'] = set(liked_post_ids)
+        else:
+            context['liked_post_ids'] = set()
+        
         return context
+
+
+class ThreadCreateView(LoginRequiredMixin, generic.CreateView):
+    """Create a new thread in a category."""
+    model = Thread
+    fields = ['title', 'category']
+    template_name = 'catalog/thread_form.html'
+    
+    def form_valid(self, form):
+        # Set the author to the current user
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+    
+    def get_success_url(self):
+        # Redirect to the newly created thread
+        return reverse_lazy('thread-detail', kwargs={'pk': self.object.pk})
 
 
 class UserProfileDetailView(generic.DetailView):
@@ -572,3 +599,178 @@ def moderator_bulk_delete(request):
             messages.warning(request, 'No posts selected for deletion.')
     
     return redirect('moderator-dashboard')
+
+
+@login_required
+def toggle_like_post(request, pk):
+    """Toggle like on a post (AJAX endpoint)."""
+    if request.method == 'POST':
+        post = get_object_or_404(Post, pk=pk)
+        user = request.user
+        
+        # Check if user already liked the post
+        existing_like = PostLike.objects.filter(post=post, user=user).first()
+        
+        if existing_like:
+            # Unlike the post
+            existing_like.delete()
+            liked = False
+        else:
+            # Like the post
+            PostLike.objects.create(post=post, user=user)
+            liked = True
+        
+        # Return updated like count and status
+        return JsonResponse({
+            'liked': liked,
+            'like_count': post.like_count()
+        })
+    
+    return JsonResponse({'error': 'Invalid request'}, status=400)
+
+
+# ============================================
+# STAFF VIEWS
+# ============================================
+
+class StaffDashboardView(StaffRequiredMixin, generic.TemplateView):
+    """Main dashboard for staff members."""
+    template_name = 'catalog/staff_dashboard.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        # Get recent users
+        context['recent_users'] = User.objects.all().order_by('-date_joined')[:20]
+        
+        # Statistics
+        context['total_posts'] = Post.objects.count()
+        context['total_threads'] = Thread.objects.count()
+        context['total_users'] = User.objects.count()
+        context['total_categories'] = Category.objects.count()
+        
+        return context
+
+
+class StaffUserListView(StaffRequiredMixin, generic.ListView):
+    """List all users for staff review."""
+    model = User
+    template_name = 'catalog/staff_user_list.html'
+    context_object_name = 'users'
+    paginate_by = 50
+    ordering = ['-date_joined']
+
+
+class StaffUserDeleteView(StaffRequiredMixin, generic.DeleteView):
+    """Allow staff to delete users."""
+    model = User
+    template_name = 'catalog/staff_user_delete.html'
+    success_url = reverse_lazy('staff-dashboard')
+    
+    def delete(self, request, *args, **kwargs):
+        user = self.get_object()
+        messages.success(request, f'User "{user.username}" deleted successfully.')
+        return super().delete(request, *args, **kwargs)
+
+
+@login_required
+@user_passes_test(is_staff_member)
+def staff_bulk_delete_users(request):
+    """Delete multiple users at once (staff only)."""
+    if request.method == 'POST':
+        user_ids = request.POST.getlist('user_ids')
+        if user_ids:
+            # Prevent self-deletion and superuser deletion
+            users_to_delete = User.objects.filter(
+                pk__in=user_ids
+            ).exclude(
+                pk=request.user.pk
+            ).exclude(
+                is_superuser=True
+            )
+            count = users_to_delete.count()
+            users_to_delete.delete()
+            messages.success(request, f'Successfully deleted {count} user(s).')
+        else:
+            messages.warning(request, 'No users selected for deletion.')
+    
+    return redirect('staff-dashboard')
+
+
+class StaffCategoryListView(StaffRequiredMixin, generic.ListView):
+    """List all categories for staff review."""
+    model = Category
+    template_name = 'catalog/staff_category_list.html'
+    context_object_name = 'categories'
+    paginate_by = 50
+    ordering = ['name']
+
+
+class StaffCategoryDeleteView(StaffRequiredMixin, generic.DeleteView):
+    """Allow staff to delete categories."""
+    model = Category
+    template_name = 'catalog/staff_category_delete.html'
+    success_url = reverse_lazy('staff-categories')
+    
+    def delete(self, request, *args, **kwargs):
+        category = self.get_object()
+        messages.success(request, f'Category "{category.name}" deleted successfully.')
+        return super().delete(request, *args, **kwargs)
+
+
+@login_required
+@user_passes_test(is_staff_member)
+def staff_bulk_delete_categories(request):
+    """Delete multiple categories at once (staff only)."""
+    if request.method == 'POST':
+        category_ids = request.POST.getlist('category_ids')
+        if category_ids:
+            categories_to_delete = Category.objects.filter(pk__in=category_ids)
+            count = categories_to_delete.count()
+            categories_to_delete.delete()
+            messages.success(request, f'Successfully deleted {count} categor{"y" if count == 1 else "ies"}.')
+        else:
+            messages.warning(request, 'No categories selected for deletion.')
+    
+    return redirect('staff-categories')
+
+
+class StaffThreadListView(StaffRequiredMixin, generic.ListView):
+    """List all threads for staff review."""
+    model = Thread
+    template_name = 'catalog/staff_thread_list.html'
+    context_object_name = 'threads'
+    paginate_by = 50
+    ordering = ['-created_date']
+    
+    def get_queryset(self):
+        return Thread.objects.all().select_related('category', 'author')
+
+
+class StaffThreadDeleteView(StaffRequiredMixin, generic.DeleteView):
+    """Allow staff to delete threads."""
+    model = Thread
+    template_name = 'catalog/staff_thread_delete.html'
+    success_url = reverse_lazy('staff-threads')
+    
+    def delete(self, request, *args, **kwargs):
+        thread = self.get_object()
+        messages.success(request, f'Thread "{thread.title}" deleted successfully.')
+        return super().delete(request, *args, **kwargs)
+
+
+@login_required
+@user_passes_test(is_staff_member)
+def staff_bulk_delete_threads(request):
+    """Delete multiple threads at once (staff only)."""
+    if request.method == 'POST':
+        thread_ids = request.POST.getlist('thread_ids')
+        if thread_ids:
+            threads_to_delete = Thread.objects.filter(pk__in=thread_ids)
+            count = threads_to_delete.count()
+            threads_to_delete.delete()
+            messages.success(request, f'Successfully deleted {count} thread(s).')
+        else:
+            messages.warning(request, 'No threads selected for deletion.')
+    
+    return redirect('staff-threads')

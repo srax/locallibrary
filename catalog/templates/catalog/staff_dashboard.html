@@ -1,0 +1,72 @@
+{% extends "catalog/staff_base.html" %}
+{% load i18n %}
+
+{% block staff_content %}
+<div class="staff-dashboard">
+    <div class="staff-stats">
+        <div class="stat-card">
+            <h3>{{ total_users }}</h3>
+            <p>Total Users</p>
+        </div>
+        <div class="stat-card">
+            <h3>{{ total_posts }}</h3>
+            <p>Total Posts</p>
+        </div>
+        <div class="stat-card">
+            <h3>{{ total_threads }}</h3>
+            <p>Total Threads</p>
+        </div>
+        <div class="stat-card">
+            <h3>{{ total_categories }}</h3>
+            <p>Total Categories</p>
+        </div>
+    </div>
+    
+    <div class="staff-section">
+        <h2>Recent Users</h2>
+        <table class="staff-table">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Joined</th>
+                    <th>Staff</th>
+                    <th>Superuser</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user_item in recent_users %}
+                <tr>
+                    <td>
+                        <a href="{{ user_item.get_absolute_url }}">{{ user_item.username }}</a>
+                    </td>
+                    <td>{{ user_item.email|default:"N/A" }}</td>
+                    <td>{{ user_item.date_joined|date:"Y-m-d H:i" }}</td>
+                    <td>{% if user_item.is_staff %}✓{% else %}✗{% endif %}</td>
+                    <td>{% if user_item.is_superuser %}✓{% else %}✗{% endif %}</td>
+                    <td>
+                        {% if not user_item.is_superuser and user_item != user %}
+                            <a href="{% url 'staff-user-delete' user_item.pk %}" class="btn-danger-small">Delete</a>
+                        {% else %}
+                            <span style="color: var(--text-muted); font-size: 0.875rem;">Protected</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6">No users yet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="staff-actions">
+        <a href="{% url 'staff-users' %}" class="btn-staff">View All Users</a>
+        <a href="{% url 'staff-categories' %}" class="btn-staff">View All Categories</a>
+        <a href="{% url 'staff-threads' %}" class="btn-staff">View All Threads</a>
+        <a href="/admin/" class="btn-staff">Django Admin</a>
+    </div>
+</div>
+{% endblock %}

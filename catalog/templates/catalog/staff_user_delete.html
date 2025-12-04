@@ -1,0 +1,40 @@
+{% extends "catalog/staff_base.html" %}
+{% load i18n %}
+
+{% block staff_title %}Delete User{% endblock %}
+
+{% block staff_content %}
+<div class="staff-section">
+    <h2>Confirm User Deletion</h2>
+    
+    <div style="background-color: #fff3cd; border: 2px solid #ffc107; padding: 1.5rem; border-radius: 0.5rem; margin: 1.5rem 0;">
+        <p style="margin: 0; font-weight: bold; color: #856404;">
+            ⚠️ Warning: This action cannot be undone!
+        </p>
+    </div>
+    
+    <p>Are you sure you want to delete the user <strong>{{ object.username }}</strong>?</p>
+    
+    <div style="background-color: var(--bg-light); padding: 1rem; border-radius: 0.375rem; margin: 1rem 0;">
+        <p><strong>User Details:</strong></p>
+        <ul>
+            <li>Username: {{ object.username }}</li>
+            <li>Email: {{ object.email|default:"N/A" }}</li>
+            <li>Joined: {{ object.date_joined|date:"Y-m-d H:i" }}</li>
+            <li>Posts: {{ object.posts.count }}</li>
+            <li>Threads: {{ object.threads.count }}</li>
+        </ul>
+        <p style="color: #dc3545; font-weight: bold;">All posts and threads by this user will also be affected.</p>
+    </div>
+    
+    <form method="post">
+        {% csrf_token %}
+        <div class="staff-actions">
+            <button type="submit" class="btn-danger-small" style="padding: 0.75rem 1.5rem; font-size: 1rem;">
+                Yes, Delete User
+            </button>
+            <a href="{% url 'staff-dashboard' %}" class="btn-staff">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

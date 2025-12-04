@@ -1,0 +1,39 @@
+{% extends "catalog/staff_base.html" %}
+{% load i18n %}
+
+{% block staff_title %}Delete Category{% endblock %}
+
+{% block staff_content %}
+<div class="staff-section">
+    <h2>Confirm Category Deletion</h2>
+    
+    <div style="background-color: #fff3cd; border: 2px solid #ffc107; padding: 1.5rem; border-radius: 0.5rem; margin: 1.5rem 0;">
+        <p style="margin: 0; font-weight: bold; color: #856404;">
+            ⚠️ Warning: This action cannot be undone!
+        </p>
+    </div>
+    
+    <p>Are you sure you want to delete the category <strong>{{ object.name }}</strong>?</p>
+    
+    <div style="background-color: var(--bg-light); padding: 1rem; border-radius: 0.375rem; margin: 1rem 0;">
+        <p><strong>Category Details:</strong></p>
+        <ul>
+            <li>Name: {{ object.name }}</li>
+            <li>Description: {{ object.description }}</li>
+            <li>Created: {{ object.created_date|date:"Y-m-d H:i" }}</li>
+            <li>Threads: {{ object.thread_count }}</li>
+        </ul>
+        <p style="color: #dc3545; font-weight: bold;">⚠️ All threads and posts in this category will also be deleted!</p>
+    </div>
+    
+    <form method="post">
+        {% csrf_token %}
+        <div class="staff-actions">
+            <button type="submit" class="btn-danger-small" style="padding: 0.75rem 1.5rem; font-size: 1rem;">
+                Yes, Delete Category
+            </button>
+            <a href="{% url 'staff-categories' %}" class="btn-staff">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

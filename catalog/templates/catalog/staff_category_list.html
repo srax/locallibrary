@@ -1,0 +1,84 @@
+{% extends "catalog/staff_base.html" %}
+{% load i18n %}
+
+{% block staff_title %}All Categories{% endblock %}
+
+{% block staff_content %}
+<div class="staff-section">
+    <h2>All Categories ({{ page_obj.paginator.count }} total)</h2>
+    
+    <form method="post" action="{% url 'staff-bulk-delete-categories' %}" onsubmit="return confirm('Are you sure you want to delete the selected categories? This will also delete all threads and posts in these categories!');">
+        {% csrf_token %}
+        
+        <table class="staff-table">
+            <thead>
+                <tr>
+                    <th><input type="checkbox" id="select-all"></th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Threads</th>
+                    <th>Created</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for category in categories %}
+                <tr>
+                    <td>
+                        <input type="checkbox" name="category_ids" value="{{ category.pk }}" class="category-checkbox">
+                    </td>
+                    <td>
+                        <a href="{{ category.get_absolute_url }}">{{ category.name }}</a>
+                    </td>
+                    <td>{{ category.description|truncatewords:15 }}</td>
+                    <td>{{ category.thread_count }}</td>
+                    <td>{{ category.created_date|date:"Y-m-d" }}</td>
+                    <td>
+                        <a href="{% url 'staff-category-delete' category.pk %}" class="btn-danger-small">Delete</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6">No categories found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+        <div class="staff-actions">
+            <button type="submit" class="btn-danger-small" style="padding: 0.75rem 1.5rem; font-size: 1rem;">
+                Delete Selected Categories
+            </button>
+        </div>
+    </form>
+    
+    {% if is_paginated %}
+    <div class="pagination" style="margin-top: 2rem;">
+        <span class="page-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo; first</a>
+                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="page-current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">next</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+document.getElementById('select-all').addEventListener('change', function() {
+    const checkboxes = document.querySelectorAll('.category-checkbox');
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = this.checked;
+    });
+});
+</script>
+{% endblock %}

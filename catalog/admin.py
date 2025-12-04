@@ -2,7 +2,7 @@ from django.contrib import admin
 
 # Register your models here.
 
-from .models import Category, Thread, Post, UserProfile, Notification
+from .models import Category, Thread, Post, UserProfile, Notification, PostLike
 
 
 # Register Category
@@ -56,3 +56,13 @@ class NotificationAdmin(admin.ModelAdmin):
     search_fields = ['recipient__username', 'actor__username', 'message']
     readonly_fields = ['created_date']
     raw_id_fields = ['recipient', 'actor', 'post']
+
+
+# Register PostLike
+@admin.register(PostLike)
+class PostLikeAdmin(admin.ModelAdmin):
+    list_display = ('post', 'user', 'created_date')
+    list_filter = ('created_date',)
+    search_fields = ['user__username', 'post__id']
+    readonly_fields = ['created_date']
+    raw_id_fields = ['post', 'user']

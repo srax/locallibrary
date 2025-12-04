@@ -145,6 +145,11 @@
                 🛡️ {% trans "Moderator Panel" %}
               </a></li>
             {% endif %}
+            {% if user.is_staff %}
+              <li><a href="{% url 'staff-dashboard' %}" class="staff-link">
+                ⚙️ {% trans "Staff Panel" %}
+              </a></li>
+            {% endif %}
             <li><a href="{{ user.get_absolute_url }}">{{ user.get_username }}</a></li>
             <li>
               <form id="logout-form-header" method="post" action="{% url 'logout' %}" style="display: inline;">
@@ -153,8 +158,6 @@
               </form>
             </li>
             {% if user.is_staff %}
-              <li><a href="/admin/">{% trans "Admin" %}</a></li>
-              <li><a href="/catalog/users">{% trans "Users" %}</a></li>
             {% endif %}
           {% else %}
             <li><a href="{% url 'register-step1' %}">{% trans "Sign Up" %}</a></li>
@@ -424,11 +427,19 @@
         <ul class="sidebar-nav">
           {% if user.is_authenticated %}
           <li><strong>{% trans "Welcome" %}, {{ user.get_username }}!</strong></li>
+          <hr>
           <li style="margin-top: 10px;">
-            <a href="{% url 'post-create' %}" class="btn btn-primary btn-sm" style="display: inline-block; padding: 8px 16px; text-decoration: none; border-radius: 4px;">
+            <a href="{% url 'thread-create' %}" class="btn btn-primary btn-sm" style="display: inline-block; padding: 8px 16px; text-decoration: none; border-radius: 4px;">
+              {% trans "Make Thread" %}
+            </a>
+            <hr>
+          </li>
+          <li style="margin-top: 10px;">
+             <a href="{% url 'post-create' %}" class="btn btn-primary btn-sm" style="display: inline-block; padding: 8px 16px; text-decoration: none; border-radius: 4px;">
               {% trans "Make Post" %}
             </a>
           </li>
+          <hr>
           {% endif %}
         </ul>
       </div>

@@ -55,6 +55,27 @@
           </div>
           <div class="card-body">
             <p class="card-text">{{ post.content }}</p>
+            {% if user.is_authenticated %}
+            <div class="post-actions">
+              <button class="btn btn-sm btn-outline-primary like-btn {% if post.id in liked_post_ids %}active{% endif %}" 
+                      data-post-id="{{ post.id }}"
+                      title="{% trans 'Like this post' %}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="{% if post.id in liked_post_ids %}currentColor{% else %}none{% endif %}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                </svg>
+                <span class="like-count">{{ post.like_count }}</span>
+              </button>
+            </div>
+            {% else %}
+            <div class="post-actions">
+              <span class="text-muted">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                </svg>
+                {{ post.like_count }}
+              </span>
+            </div>
+            {% endif %}
           </div>
         </div>
       {% endfor %}
@@ -66,59 +87,110 @@
 {% if user.is_authenticated %}
 <script>
 (function() {
+  // AI Summarize functionality
   const btn = document.getElementById('summarize-btn');
   const result = document.getElementById('summary-result');
   const summaryText = document.getElementById('summary-text');
 
-  if (!btn) return;
+  if (btn) {
+    btn.addEventListener('click', function() {
+      const threadId = this.dataset.threadId;
+      const originalText = this.innerHTML;
 
-  btn.addEventListener('click', function() {
-    const threadId = this.dataset.threadId;
-    const originalText = this.innerHTML;
+      // Show loading state
+      this.disabled = true;
+      this.innerHTML = '<span class="spinner-border spinner-border-sm" role="status"></span> {% trans "Generating..." %}';
 
-    // Show loading state
-    this.disabled = true;
-    this.innerHTML = '<span class="spinner-border spinner-border-sm" role="status"></span> {% trans "Generating..." %}';
-
-    // Get CSRF token
-    function getCookie(name) {
-      let cookieValue = null;
-      if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-          const cookie = cookies[i].trim();
-          if (cookie.substring(0, name.length + 1) === (name + '=')) {
-            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-            break;
+      // Get CSRF token
+      function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+          const cookies = document.cookie.split(';');
+          for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+              break;
+            }
           }
         }
+        return cookieValue;
       }
-      return cookieValue;
-    }
 
-    fetch(`/catalog/thread/${threadId}/summarize/`, {
-      method: 'POST',
-      headers: {
-        'X-CSRFToken': getCookie('csrftoken'),
-        'Content-Type': 'application/json',
-      },
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.summary) {
-        summaryText.textContent = data.summary;
-        result.style.display = 'block';
-        btn.style.display = 'none';
-      } else if (data.error) {
-        alert('Error: ' + data.error);
+      fetch(`/catalog/thread/${threadId}/summarize/`, {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': getCookie('csrftoken'),
+          'Content-Type': 'application/json',
+        },
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.summary) {
+          summaryText.textContent = data.summary;
+          result.style.display = 'block';
+          btn.style.display = 'none';
+        } else if (data.error) {
+          alert('Error: ' + data.error);
+          btn.disabled = false;
+          btn.innerHTML = originalText;
+        }
+      })
+      .catch(error => {
+        alert('Error generating summary. Please try again.');
         btn.disabled = false;
         btn.innerHTML = originalText;
+      });
+    });
+  }
+
+  // Get CSRF token helper function
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
       }
-    })
-    .catch(error => {
-      alert('Error generating summary. Please try again.');
-      btn.disabled = false;
-      btn.innerHTML = originalText;
+    }
+    return cookieValue;
+  }
+
+  // Like button functionality
+  const likeButtons = document.querySelectorAll('.like-btn');
+  likeButtons.forEach(function(button) {
+    button.addEventListener('click', function() {
+      const postId = this.dataset.postId;
+      const likeCountSpan = this.querySelector('.like-count');
+      const heartSvg = this.querySelector('svg');
+
+      fetch(`/catalog/post/${postId}/like/`, {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': getCookie('csrftoken'),
+          'Content-Type': 'application/json',
+        },
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.liked !== undefined) {
+          likeCountSpan.textContent = data.like_count;
+          if (data.liked) {
+            this.classList.add('active');
+            heartSvg.setAttribute('fill', 'currentColor');
+          } else {
+            this.classList.remove('active');
+            heartSvg.setAttribute('fill', 'none');
+          }
+        }
+      })
+      .catch(error => {
+        console.error('Error toggling like:', error);
+      });
     });
   });
 })();

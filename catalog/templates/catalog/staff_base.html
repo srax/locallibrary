@@ -1,0 +1,196 @@
+{% extends "base_generic.html" %}
+{% load i18n %}
+
+{% block content %}
+<div class="staff-panel">
+    <div class="staff-header">
+        <h1 class="staff-title">
+            <span class="staff-badge">⚙️ STAFF</span>
+            {% block staff_title %}Panel{% endblock %}
+        </h1>
+        <nav class="staff-nav">
+            <a href="{% url 'staff-dashboard' %}" class="staff-nav-link {% if request.resolver_match.url_name == 'staff-dashboard' %}active{% endif %}">
+                Dashboard
+            </a>
+            <a href="{% url 'staff-users' %}" class="staff-nav-link {% if request.resolver_match.url_name == 'staff-users' %}active{% endif %}">
+                All Users
+            </a>
+            <a href="{% url 'staff-categories' %}" class="staff-nav-link {% if request.resolver_match.url_name == 'staff-categories' %}active{% endif %}">
+                All Categories
+            </a>
+            <a href="{% url 'staff-threads' %}" class="staff-nav-link {% if request.resolver_match.url_name == 'staff-threads' %}active{% endif %}">
+                All Threads
+            </a>
+        </nav>
+    </div>
+    
+    {% block staff_content %}
+    {% endblock %}
+</div>
+
+<style>
+.staff-panel {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.staff-header {
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 3px solid #6c757d;
+}
+
+.staff-title {
+    font-size: 2rem;
+    color: var(--text-color);
+    margin-bottom: 1rem;
+}
+
+.staff-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: bold;
+    margin-right: 0.5rem;
+    box-shadow: 0 2px 8px rgba(108, 117, 125, 0.3);
+}
+
+.staff-nav {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.staff-nav-link {
+    padding: 0.5rem 1rem;
+    background-color: var(--bg-light);
+    border: 2px solid var(--border-color);
+    border-radius: 0.375rem;
+    text-decoration: none;
+    color: var(--text-color);
+    font-weight: 500;
+}
+
+.staff-nav-link:hover {
+    background-color: #6c757d;
+    color: white;
+    border-color: #6c757d;
+}
+
+.staff-nav-link.active {
+    background-color: #6c757d;
+    color: white;
+    border-color: #495057;
+}
+
+.staff-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background: linear-gradient(135deg, var(--bg-light) 0%, var(--bg-color) 100%);
+    border: 2px solid var(--border-color);
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.stat-card h3 {
+    font-size: 2.5rem;
+    color: #6c757d;
+    margin: 0;
+    font-weight: bold;
+}
+
+.stat-card p {
+    margin: 0.5rem 0 0 0;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.staff-section {
+    background-color: var(--bg-color);
+    border: 2px solid var(--border-color);
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.staff-section h2 {
+    color: var(--text-color);
+    margin-top: 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.staff-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+.staff-table th,
+.staff-table td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.staff-table th {
+    background-color: var(--bg-light);
+    font-weight: bold;
+    color: var(--text-color);
+}
+
+.staff-table tr:hover {
+    background-color: var(--bg-light);
+}
+
+.btn-staff {
+    background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 0.375rem;
+    text-decoration: none;
+    display: inline-block;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.btn-staff:hover {
+    background: linear-gradient(135deg, #5a6268 0%, #3d4246 100%);
+    color: white;
+}
+
+.btn-danger-small {
+    background-color: #dc3545;
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 0.25rem;
+    text-decoration: none;
+    font-size: 0.875rem;
+    display: inline-block;
+}
+
+.btn-danger-small:hover {
+    background-color: #c82333;
+    color: white;
+}
+
+.staff-actions {
+    margin-top: 1rem;
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+</style>
+{% endblock %}

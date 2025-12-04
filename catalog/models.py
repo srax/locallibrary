@@ -94,6 +94,31 @@ class Post(models.Model):
     def get_absolute_url(self):
         """Returns the URL to access this post."""
         return reverse('post-detail', args=[str(self.id)])
+    
+    def like_count(self):
+        """Returns the number of likes on this post."""
+        return self.likes.count()
+    
+    def is_liked_by(self, user):
+        """Check if a specific user has liked this post."""
+        if user.is_authenticated:
+            return self.likes.filter(user=user).exists()
+        return False
+
+
+class PostLike(models.Model):
+    """Model representing a like on a post."""
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='likes')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='post_likes')
+    created_date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('post', 'user')
+        ordering = ['-created_date']
+
+    def __str__(self):
+        """String for representing the Model object."""
+        return f'{self.user.username} likes post {self.post.id}'
 
 
 class UserProfile(models.Model):

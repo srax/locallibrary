@@ -31,3 +31,19 @@ def is_moderator(user):
                 user.groups.filter(name='Moderators').exists())
     except:
         return False
+
+
+class StaffRequiredMixin(UserPassesTestMixin):
+    """Mixin to restrict access to staff members only."""
+    
+    def test_func(self):
+        user = self.request.user
+        return user.is_authenticated and user.is_staff
+    
+    def handle_no_permission(self):
+        raise PermissionDenied("You must be a staff member to access this page.")
+
+
+def is_staff_member(user):
+    """Helper function to check if a user is a staff member."""
+    return user.is_authenticated and user.is_staff

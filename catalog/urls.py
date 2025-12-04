@@ -8,6 +8,7 @@ urlpatterns = [
     path('category/<int:pk>', views.CategoryDetailView.as_view(), name='category-detail'),
     path('threads/', views.ThreadListView.as_view(), name='threads'),
     path('thread/<int:pk>', views.ThreadDetailView.as_view(), name='thread-detail'),
+    path('thread/new/', views.ThreadCreateView.as_view(), name='thread-create'),
     path('profile/<int:pk>', views.UserProfileDetailView.as_view(), name='profile-detail'),
     path('profile/<int:pk>/edit/', views.UserProfileUpdateView.as_view(), name='profile-edit'),
     path('api/time/', views.time_proxy, name='time-proxy'),
@@ -33,4 +34,17 @@ urlpatterns = [
     path('moderator/posts/', views.ModeratorPostListView.as_view(), name='moderator-posts'),
     path('moderator/post/<int:pk>/delete/', views.ModeratorPostDeleteView.as_view(), name='moderator-post-delete'),
     path('moderator/bulk-delete/', views.moderator_bulk_delete, name='moderator-bulk-delete'),
+    # Staff URLs
+    path('staff/', views.StaffDashboardView.as_view(), name='staff-dashboard'),
+    path('staff/users/', views.StaffUserListView.as_view(), name='staff-users'),
+    path('staff/user/<int:pk>/delete/', views.StaffUserDeleteView.as_view(), name='staff-user-delete'),
+    path('staff/bulk-delete-users/', views.staff_bulk_delete_users, name='staff-bulk-delete-users'),
+    path('staff/categories/', views.StaffCategoryListView.as_view(), name='staff-categories'),
+    path('staff/category/<int:pk>/delete/', views.StaffCategoryDeleteView.as_view(), name='staff-category-delete'),
+    path('staff/bulk-delete-categories/', views.staff_bulk_delete_categories, name='staff-bulk-delete-categories'),
+    path('staff/threads/', views.StaffThreadListView.as_view(), name='staff-threads'),
+    path('staff/thread/<int:pk>/delete/', views.StaffThreadDeleteView.as_view(), name='staff-thread-delete'),
+    path('staff/bulk-delete-threads/', views.staff_bulk_delete_threads, name='staff-bulk-delete-threads'),
+    # Like URLs
+    path('post/<int:pk>/like/', views.toggle_like_post, name='post-like'),
 ]

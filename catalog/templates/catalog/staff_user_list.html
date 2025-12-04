@@ -1,0 +1,96 @@
+{% extends "catalog/staff_base.html" %}
+{% load i18n %}
+
+{% block staff_title %}All Users{% endblock %}
+
+{% block staff_content %}
+<div class="staff-section">
+    <h2>All Users ({{ page_obj.paginator.count }} total)</h2>
+    
+    <form method="post" action="{% url 'staff-bulk-delete-users' %}" onsubmit="return confirm('Are you sure you want to delete the selected users?');">
+        {% csrf_token %}
+        
+        <table class="staff-table">
+            <thead>
+                <tr>
+                    <th><input type="checkbox" id="select-all"></th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Joined</th>
+                    <th>Last Login</th>
+                    <th>Staff</th>
+                    <th>Superuser</th>
+                    <th>Posts</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user_item in users %}
+                <tr>
+                    <td>
+                        {% if not user_item.is_superuser and user_item != user %}
+                            <input type="checkbox" name="user_ids" value="{{ user_item.pk }}" class="user-checkbox">
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{{ user_item.get_absolute_url }}">{{ user_item.username }}</a>
+                    </td>
+                    <td>{{ user_item.email|default:"N/A" }}</td>
+                    <td>{{ user_item.date_joined|date:"Y-m-d" }}</td>
+                    <td>{{ user_item.last_login|date:"Y-m-d H:i"|default:"Never" }}</td>
+                    <td>{% if user_item.is_staff %}✓{% else %}✗{% endif %}</td>
+                    <td>{% if user_item.is_superuser %}✓{% else %}✗{% endif %}</td>
+                    <td>{{ user_item.posts.count }}</td>
+                    <td>
+                        {% if not user_item.is_superuser and user_item != user %}
+                            <a href="{% url 'staff-user-delete' user_item.pk %}" class="btn-danger-small">Delete</a>
+                        {% else %}
+                            <span style="color: var(--text-muted); font-size: 0.875rem;">Protected</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="9">No users found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+        <div class="staff-actions">
+            <button type="submit" class="btn-danger-small" style="padding: 0.75rem 1.5rem; font-size: 1rem;">
+                Delete Selected Users
+            </button>
+        </div>
+    </form>
+    
+    {% if is_paginated %}
+    <div class="pagination" style="margin-top: 2rem;">
+        <span class="page-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo; first</a>
+                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="page-current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">next</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+document.getElementById('select-all').addEventListener('change', function() {
+    const checkboxes = document.querySelectorAll('.user-checkbox');
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = this.checked;
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,98 @@
+{% extends "catalog/staff_base.html" %}
+{% load i18n %}
+
+{% block staff_title %}All Threads{% endblock %}
+
+{% block staff_content %}
+<div class="staff-section">
+    <h2>All Threads ({{ page_obj.paginator.count }} total)</h2>
+    
+    <form method="post" action="{% url 'staff-bulk-delete-threads' %}" onsubmit="return confirm('Are you sure you want to delete the selected threads? This will also delete all posts in these threads!');">
+        {% csrf_token %}
+        
+        <table class="staff-table">
+            <thead>
+                <tr>
+                    <th><input type="checkbox" id="select-all"></th>
+                    <th>Title</th>
+                    <th>Category</th>
+                    <th>Author</th>
+                    <th>Posts</th>
+                    <th>Views</th>
+                    <th>Created</th>
+                    <th>Pinned</th>
+                    <th>Locked</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for thread in threads %}
+                <tr>
+                    <td>
+                        <input type="checkbox" name="thread_ids" value="{{ thread.pk }}" class="thread-checkbox">
+                    </td>
+                    <td>
+                        <a href="{{ thread.get_absolute_url }}">{{ thread.title|truncatechars:50 }}</a>
+                    </td>
+                    <td>{{ thread.category.name }}</td>
+                    <td>
+                        {% if thread.author %}
+                            <a href="{{ thread.author.get_absolute_url }}">{{ thread.author.username }}</a>
+                        {% else %}
+                            <em>Deleted</em>
+                        {% endif %}
+                    </td>
+                    <td>{{ thread.post_count }}</td>
+                    <td>{{ thread.views }}</td>
+                    <td>{{ thread.created_date|date:"Y-m-d" }}</td>
+                    <td>{% if thread.is_pinned %}✓{% else %}✗{% endif %}</td>
+                    <td>{% if thread.is_locked %}✓{% else %}✗{% endif %}</td>
+                    <td>
+                        <a href="{% url 'staff-thread-delete' thread.pk %}" class="btn-danger-small">Delete</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="10">No threads found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+        <div class="staff-actions">
+            <button type="submit" class="btn-danger-small" style="padding: 0.75rem 1.5rem; font-size: 1rem;">
+                Delete Selected Threads
+            </button>
+        </div>
+    </form>
+    
+    {% if is_paginated %}
+    <div class="pagination" style="margin-top: 2rem;">
+        <span class="page-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo; first</a>
+                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="page-current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">next</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+document.getElementById('select-all').addEventListener('change', function() {
+    const checkboxes = document.querySelectorAll('.thread-checkbox');
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = this.checked;
+    });
+});
+</script>
+{% endblock %}

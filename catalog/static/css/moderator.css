@@ -160,6 +160,11 @@
     font-weight: bold;
 }
 
+.staff-link {
+    color: #6c757d;
+    font-weight: bold;
+}
+
 /* Dark mode support for moderator panel */
 body.dark-mode .moderator-dashboard {
     background: #1a1a1a;
