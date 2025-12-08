@@ -2,37 +2,534 @@
 {% load i18n %}
 
 {% block content %}
-  <h1>{% trans "Forum Home" %}</h1>
-  {% if user.is_authenticated %}
-    <p>
- 
-    </p>
-  {% endif %}
-  <p>
-    {% trans "Welcome to our Forum! A place for discussions and community engagement." %}
-  </p>
-  <h2>{% trans "Forum Statistics" %}</h2>
-  <p>{% trans "The forum has the following statistics:" %}</p>
-  <ul>
-    <li><strong>{% trans "Categories:" %}</strong> {{ num_categories }}</li>
-    <li><strong>{% trans "Threads:" %}</strong> {{ num_threads }}</li>
-    <li><strong>{% trans "Posts:" %}</strong> {{ num_posts }}</li>
-    <li><strong>{% trans "Users:" %}</strong> {{ num_users }}</li>
-  </ul>
-  
-  <h2>{% trans "Recent Threads" %}</h2>
-  {% if recent_threads %}
-  <ul>
-    {% for thread in recent_threads %}
-      <li>
-        <a href="{{ thread.get_absolute_url }}">{{ thread.title }}</a>
-        - {% trans "by" %} {{ thread.author.username }} {% trans "in" %} <strong>{{ thread.category.name }}</strong>
-      </li>
-    {% endfor %}
-  </ul>
-  {% else %}
-    <p>{% trans "No threads yet. Be the first to start a discussion!" %}</p>
-  {% endif %}
-  
-  {# World clock moved to base template so it appears on every page. #}
+<div class="home-page">
+  <div class="hero-section">
+    <h1>{% trans "Welcome to the Forum" %}</h1>
+    <p class="lead">{% trans "A place for discussions and community engagement." %}</p>
+    
+    <div class="quick-stats">
+      <div class="stat-card">
+        <div class="stat-number">{{ num_categories }}</div>
+        <div class="stat-label">{% trans "Categories" %}</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">{{ num_threads }}</div>
+        <div class="stat-label">{% trans "Threads" %}</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">{{ num_posts }}</div>
+        <div class="stat-label">{% trans "Posts" %}</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">{{ num_users }}</div>
+        <div class="stat-label">{% trans "Members" %}</div>
+      </div>
+    </div>
+
+    {% if user.is_authenticated %}
+    <div class="quick-actions">
+      <a href="{% url 'thread-create' %}" class="btn btn-primary">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="margin-right: 0.5rem;">
+          <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+        </svg>
+        {% trans "Start New Thread" %}
+      </a>
+      <a href="{% url 'categories' %}" class="btn btn-outline-primary">{% trans "Browse Categories" %}</a>
+    </div>
+    {% else %}
+    <div class="quick-actions">
+      <a href="{% url 'login' %}" class="btn btn-primary">{% trans "Sign In to Join the Discussion" %}</a>
+      <a href="{% url 'register-step1' %}" class="btn btn-outline-primary">{% trans "Register" %}</a>
+    </div>
+    {% endif %}
+  </div>
+
+  {# Categories Section #}
+  <section class="home-section">
+    <div class="section-header">
+      <h2>{% trans "Forum Categories" %}</h2>
+      <a href="{% url 'categories' %}" class="view-all-link">{% trans "View All" %} →</a>
+    </div>
+    
+    {% if categories %}
+    <div class="category-grid">
+      {% for category in categories %}
+      <a href="{{ category.get_absolute_url }}" class="category-card">
+        <div class="category-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zM2.5 2a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zM1 10.5A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3z"/>
+          </svg>
+        </div>
+        <div class="category-info">
+          <h3 class="category-name">{{ category.name }}</h3>
+          <p class="category-description">{{ category.description|truncatewords:15 }}</p>
+          <div class="category-stats">
+            <span class="thread-count">{{ category.thread_count }} {% trans "threads" %}</span>
+          </div>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p class="text-muted">{% trans "No categories yet." %}</p>
+    {% endif %}
+  </section>
+
+  {# Most Active Threads Section #}
+  <section class="home-section">
+    <div class="section-header">
+      <h2>{% trans "Most Active Threads" %}</h2>
+      <a href="{% url 'threads' %}" class="view-all-link">{% trans "View All Threads" %} →</a>
+    </div>
+    
+    {% if most_active_threads %}
+    <div class="thread-list">
+      {% for thread in most_active_threads %}
+      <div class="thread-item">
+        <div class="thread-main">
+          {% if thread.is_pinned %}
+          <span class="thread-badge pinned" title="{% trans 'Pinned' %}">📌</span>
+          {% endif %}
+          {% if thread.is_locked %}
+          <span class="thread-badge locked" title="{% trans 'Locked' %}">🔒</span>
+          {% endif %}
+          <a href="{{ thread.get_absolute_url }}" class="thread-title">{{ thread.title }}</a>
+          <div class="thread-meta">
+            {% trans "by" %} 
+            {% if thread.author %}
+              <a href="{{ thread.author.get_absolute_url }}" class="thread-author">{{ thread.author.username }}</a>
+            {% else %}
+              <span class="thread-author">{% trans "Unknown" %}</span>
+            {% endif %}
+            {% trans "in" %} <a href="{{ thread.category.get_absolute_url }}" class="thread-category">{{ thread.category.name }}</a>
+          </div>
+        </div>
+        <div class="thread-stats">
+          <div class="stat-item">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M2.678 11.894a1 1 0 0 1 .287.801 10.97 10.97 0 0 1-.398 2c1.395-.323 2.247-.697 2.634-.893a1 1 0 0 1 .71-.074A8.06 8.06 0 0 0 8 14c3.996 0 7-2.807 7-6 0-3.192-3.004-6-7-6S1 4.808 1 8c0 1.468.617 2.83 1.678 3.894zm-.493 3.905a21.682 21.682 0 0 1-.713.129c-.2.032-.352-.176-.273-.362a9.68 9.68 0 0 0 .244-.637l.003-.01c.248-.72.45-1.548.524-2.319C.743 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7-3.582 7-8 7a9.06 9.06 0 0 1-2.347-.306c-.52.263-1.639.742-3.468 1.105z"/>
+            </svg>
+            <span>{{ thread.post_count }}</span>
+          </div>
+          <div class="stat-item">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"/>
+              <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/>
+            </svg>
+            <span>{{ thread.views }}</span>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p class="text-muted">{% trans "No threads yet. Be the first to start a discussion!" %}</p>
+    {% endif %}
+  </section>
+
+  {# Recent Threads Section #}
+  <section class="home-section">
+    <div class="section-header">
+      <h2>{% trans "Recent Threads" %}</h2>
+    </div>
+    
+    {% if recent_threads %}
+    <div class="thread-list">
+      {% for thread in recent_threads %}
+      <div class="thread-item">
+        <div class="thread-main">
+          {% if thread.is_pinned %}
+          <span class="thread-badge pinned" title="{% trans 'Pinned' %}">📌</span>
+          {% endif %}
+          {% if thread.is_locked %}
+          <span class="thread-badge locked" title="{% trans 'Locked' %}">🔒</span>
+          {% endif %}
+          <a href="{{ thread.get_absolute_url }}" class="thread-title">{{ thread.title }}</a>
+          <div class="thread-meta">
+            {% trans "by" %} 
+            {% if thread.author %}
+              <a href="{{ thread.author.get_absolute_url }}" class="thread-author">{{ thread.author.username }}</a>
+            {% else %}
+              <span class="thread-author">{% trans "Unknown" %}</span>
+            {% endif %}
+            {% trans "in" %} <a href="{{ thread.category.get_absolute_url }}" class="thread-category">{{ thread.category.name }}</a>
+            • <span class="thread-date">{{ thread.created_date|date:"M d, Y" }}</span>
+          </div>
+        </div>
+        <div class="thread-stats">
+          <div class="stat-item">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M2.678 11.894a1 1 0 0 1 .287.801 10.97 10.97 0 0 1-.398 2c1.395-.323 2.247-.697 2.634-.893a1 1 0 0 1 .71-.074A8.06 8.06 0 0 0 8 14c3.996 0 7-2.807 7-6 0-3.192-3.004-6-7-6S1 4.808 1 8c0 1.468.617 2.83 1.678 3.894zm-.493 3.905a21.682 21.682 0 0 1-.713.129c-.2.032-.352-.176-.273-.362a9.68 9.68 0 0 0 .244-.637l.003-.01c.248-.72.45-1.548.524-2.319C.743 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7-3.582 7-8 7a9.06 9.06 0 0 1-2.347-.306c-.52.263-1.639.742-3.468 1.105z"/>
+            </svg>
+            <span>{{ thread.post_count }}</span>
+          </div>
+          <div class="stat-item">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"/>
+              <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/>
+            </svg>
+            <span>{{ thread.views }}</span>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p class="text-muted">{% trans "No threads yet. Be the first to start a discussion!" %}</p>
+    {% endif %}
+  </section>
+
+  {# Most Viewed Threads Section #}
+  <section class="home-section">
+    <div class="section-header">
+      <h2>{% trans "Most Viewed Threads" %}</h2>
+    </div>
+    
+    {% if most_viewed_threads %}
+    <div class="thread-list">
+      {% for thread in most_viewed_threads %}
+      <div class="thread-item">
+        <div class="thread-main">
+          {% if thread.is_pinned %}
+          <span class="thread-badge pinned" title="{% trans 'Pinned' %}">📌</span>
+          {% endif %}
+          {% if thread.is_locked %}
+          <span class="thread-badge locked" title="{% trans 'Locked' %}">🔒</span>
+          {% endif %}
+          <a href="{{ thread.get_absolute_url }}" class="thread-title">{{ thread.title }}</a>
+          <div class="thread-meta">
+            {% trans "by" %} 
+            {% if thread.author %}
+              <a href="{{ thread.author.get_absolute_url }}" class="thread-author">{{ thread.author.username }}</a>
+            {% else %}
+              <span class="thread-author">{% trans "Unknown" %}</span>
+            {% endif %}
+            {% trans "in" %} <a href="{{ thread.category.get_absolute_url }}" class="thread-category">{{ thread.category.name }}</a>
+          </div>
+        </div>
+        <div class="thread-stats">
+          <div class="stat-item">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M2.678 11.894a1 1 0 0 1 .287.801 10.97 10.97 0 0 1-.398 2c1.395-.323 2.247-.697 2.634-.893a1 1 0 0 1 .71-.074A8.06 8.06 0 0 0 8 14c3.996 0 7-2.807 7-6 0-3.192-3.004-6-7-6S1 4.808 1 8c0 1.468.617 2.83 1.678 3.894zm-.493 3.905a21.682 21.682 0 0 1-.713.129c-.2.032-.352-.176-.273-.362a9.68 9.68 0 0 0 .244-.637l.003-.01c.248-.72.45-1.548.524-2.319C.743 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7-3.582 7-8 7a9.06 9.06 0 0 1-2.347-.306c-.52.263-1.639.742-3.468 1.105z"/>
+            </svg>
+            <span>{{ thread.post_count }}</span>
+          </div>
+          <div class="stat-item">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"/>
+              <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/>
+            </svg>
+            <span>{{ thread.views }}</span>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p class="text-muted">{% trans "No threads yet." %}</p>
+    {% endif %}
+  </section>
+</div>
+
+<style>
+/* Home Page Specific Styles */
+.home-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.hero-section {
+  text-align: center;
+  padding: 3rem 1rem;
+  margin-bottom: 3rem;
+  background: linear-gradient(135deg, var(--bg-light) 0%, var(--bg-color) 100%);
+  border-radius: 1rem;
+  border: 1px solid var(--border-color);
+}
+
+.hero-section h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: var(--text-color);
+}
+
+.hero-section .lead {
+  font-size: 1.25rem;
+  color: var(--text-muted);
+  margin-bottom: 2rem;
+}
+
+.quick-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+  margin: 2rem auto;
+  max-width: 800px;
+}
+
+.stat-card {
+  background: var(--bg-color);
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.stat-number {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  margin-bottom: 0.5rem;
+}
+
+.stat-label {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.quick-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+}
+
+.home-section {
+  margin-bottom: 3rem;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.section-header h2 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: var(--text-color);
+  margin: 0;
+}
+
+.view-all-link {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.view-all-link:hover {
+  color: var(--primary-hover);
+  text-decoration: underline;
+}
+
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.category-card {
+  display: flex;
+  gap: 1rem;
+  background: var(--bg-color);
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  text-decoration: none;
+  color: var(--text-color);
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+}
+
+.category-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-color: var(--primary-color);
+  text-decoration: none;
+}
+
+.category-icon {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  background: var(--bg-light);
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary-color);
+}
+
+.category-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.category-name {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+  color: var(--text-color);
+}
+
+.category-description {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin: 0 0 0.75rem 0;
+  line-height: 1.4;
+}
+
+.category-stats {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+.thread-count {
+  font-weight: 500;
+}
+
+.thread-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.thread-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--bg-color);
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  padding: 1rem 1.25rem;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.thread-item:hover {
+  background: var(--bg-light);
+  border-color: var(--primary-color);
+}
+
+.thread-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.thread-badge {
+  display: inline-block;
+  margin-right: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.thread-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-color);
+  text-decoration: none;
+  display: inline-block;
+  margin-bottom: 0.25rem;
+}
+
+.thread-title:hover {
+  color: var(--primary-color);
+  text-decoration: underline;
+}
+
+.thread-meta {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.thread-author,
+.thread-category {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.thread-author:hover,
+.thread-category:hover {
+  text-decoration: underline;
+}
+
+.thread-stats {
+  display: flex;
+  gap: 1rem;
+  flex-shrink: 0;
+  margin-left: 1rem;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+}
+
+.stat-item svg {
+  opacity: 0.6;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .hero-section h1 {
+    font-size: 2rem;
+  }
+
+  .quick-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .category-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .thread-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .thread-stats {
+    margin-left: 0;
+    margin-top: 0.75rem;
+  }
+
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+}
+
+/* Dark mode adjustments */
+body.dark-mode .category-card,
+body.dark-mode .thread-item {
+  background-color: #2a2d35;
+}
+
+body.dark-mode .category-card:hover,
+body.dark-mode .thread-item:hover {
+  background-color: #2d3238;
+}
+
+body.dark-mode .stat-card {
+  background-color: #2a2d35;
+}
+
+body.dark-mode .category-icon {
+  background-color: #1a1d23;
+}
+</style>
 {% endblock %}

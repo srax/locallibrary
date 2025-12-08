@@ -23,6 +23,7 @@ from .mixins import ModeratorRequiredMixin, is_moderator, StaffRequiredMixin, is
 
 def index(request):
     """View function for home page of forum site."""
+    from django.db.models import Count
 
     # Generate counts of main objects
     num_categories = Category.objects.all().count()
@@ -30,17 +31,32 @@ def index(request):
     num_posts = Post.objects.all().count()
     num_users = User.objects.count()
 
+    # Get all categories with thread counts
+    categories = Category.objects.annotate(
+        thread_count=Count('thread')
+    ).order_by('name')
+
     # Get recent threads
-    recent_threads = Thread.objects.all().order_by('-created_date')[:5]
+    recent_threads = Thread.objects.select_related('author', 'category').order_by('-created_date')[:5]
+
+    # Get most active threads by post count
+    most_active_threads = Thread.objects.annotate(
+        post_count=Count('post')
+    ).select_related('author', 'category').order_by('-post_count')[:5]
+
+    # Get most viewed threads
+    most_viewed_threads = Thread.objects.select_related('author', 'category').order_by('-views')[:5]
 
     context = {
         'num_categories': num_categories,
         'num_threads': num_threads,
         'num_posts': num_posts,
         'num_users': num_users,
+        'categories': categories,
         'recent_threads': recent_threads,
+        'most_active_threads': most_active_threads,
+        'most_viewed_threads': most_viewed_threads,
     }
-
 
     # Render the HTML template index.html with the data in the context variable
     return render(request, 'index.html', context=context)
