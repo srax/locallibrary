@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-17 17:29-0500\n"
+"POT-Creation-Date: 2025-12-08 17:49+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,61 +18,136 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: catalog/templates/base_generic.html:8
+#: catalog/templates/base_generic.html:8 catalog/templates/base_generic.html:61
+#: catalog/templates/catalog/moderator_base.html:5
+#: catalog/templates/catalog/notification_list.html:4
 msgid "Forum"
 msgstr "Forum - Svensk"
 
-#: catalog/templates/base_generic.html:180
+#: catalog/templates/base_generic.html:82
 msgid "Search threads..."
 msgstr "Sök efter trådar..."
 
-#: catalog/templates/base_generic.html:183
+#: catalog/templates/base_generic.html:83
+#: catalog/templates/catalog/help.html:29
+#: catalog/templates/catalog/help.html:107
 msgid "Search"
 msgstr "Sök"
 
-#: catalog/templates/base_generic.html:193
-msgid "Logout"
-msgstr "Logga ut"
+#: catalog/templates/base_generic.html:90
+#: chat/templates/chat/conversation_list.html:4
+#: chat/templates/chat/conversation_list.html:10
+msgid "Messages"
+msgstr ""
 
-#: catalog/templates/base_generic.html:197
-msgid "Login"
-msgstr "Logga in"
+#: catalog/templates/base_generic.html:101
+#: catalog/templates/base_generic.html:113
+#: catalog/templates/catalog/notification_list.html:4
+#: catalog/templates/catalog/notification_list.html:9
+#, fuzzy
+#| msgid "Location:"
+msgid "Notifications"
+msgstr "Plats:"
 
-#: catalog/templates/base_generic.html:200
+#: catalog/templates/base_generic.html:119
+#: catalog/templates/catalog/notification_list.html:43
+msgid "ago"
+msgstr ""
+
+#: catalog/templates/base_generic.html:125
+msgid "No new notifications"
+msgstr ""
+
+#: catalog/templates/base_generic.html:130
+msgid "View all notifications"
+msgstr ""
+
+#: catalog/templates/base_generic.html:137
+#: catalog/templates/catalog/help.html:26 templates/404.html:110
 msgid "Home"
 msgstr "Hem"
 
-#: catalog/templates/base_generic.html:201
-#: catalog/templates/catalog/search_results.html:19
-msgid "All categories"
+#: catalog/templates/base_generic.html:138
+#: catalog/templates/catalog/help.html:27
+#, fuzzy
+#| msgid "All categories"
+msgid "All Categories"
 msgstr "Alla kategorier"
 
-#: catalog/templates/base_generic.html:202
-msgid "All threads"
+#: catalog/templates/base_generic.html:139
+#: catalog/templates/catalog/help.html:28
+#: catalog/templates/catalog/thread_list.html:5
+msgid "All Threads"
 msgstr "Alla trådar"
 
-#: catalog/templates/base_generic.html:207
-msgid "Admin"
-msgstr "Administratör"
+#: catalog/templates/base_generic.html:140
+msgid "Help"
+msgstr ""
 
-#: catalog/templates/base_generic.html:208
-#: catalog/templates/catalog/user_list.html:5
-msgid "Users"
-msgstr "Användare"
+#: catalog/templates/base_generic.html:142
+#: catalog/templates/catalog/help.html:42
+#, fuzzy
+#| msgid "Posts:"
+msgid "My Posts"
+msgstr "Inlägg:"
 
-#: catalog/templates/base_generic.html:219
+#: catalog/templates/base_generic.html:145
+#: catalog/templates/catalog/moderator_base.html:5
+#: catalog/templates/catalog/moderator_base.html:12
+msgid "Moderator Panel"
+msgstr ""
+
+#: catalog/templates/base_generic.html:150
+msgid "Staff Panel"
+msgstr ""
+
+#: catalog/templates/base_generic.html:157
+msgid "Logout"
+msgstr "Logga ut"
+
+#: catalog/templates/base_generic.html:163
+#: catalog/templates/catalog/help.html:15
+msgid "Sign Up"
+msgstr ""
+
+#: catalog/templates/base_generic.html:164
+#: catalog/templates/catalog/help.html:156 templates/registration/login.html:7
+#: templates/registration/login.html:47
+msgid "Login"
+msgstr "Logga in"
+
+#: catalog/templates/base_generic.html:429
+#: templates/registration/register_step2.html:7
+msgid "Welcome"
+msgstr ""
+
+#: catalog/templates/base_generic.html:433
+#, fuzzy
+#| msgid "Total Threads:"
+msgid "Make Thread"
+msgstr "Totalt antal trådar:"
+
+#: catalog/templates/base_generic.html:439
+msgid "Make Post"
+msgstr ""
+
+#: catalog/templates/base_generic.html:454
+#: catalog/templates/catalog/notification_list.html:59
 msgid "previous"
 msgstr "föregående"
 
-#: catalog/templates/base_generic.html:222
+#: catalog/templates/base_generic.html:457
+#: catalog/templates/catalog/notification_list.html:62
 msgid "Page"
 msgstr "Sida"
 
-#: catalog/templates/base_generic.html:222
+#: catalog/templates/base_generic.html:457
+#: catalog/templates/catalog/notification_list.html:62
 msgid "of"
 msgstr "av"
 
-#: catalog/templates/base_generic.html:225
+#: catalog/templates/base_generic.html:460
+#: catalog/templates/catalog/notification_list.html:65
 msgid "next"
 msgstr "nästa"
 
@@ -82,7 +157,7 @@ msgstr "Beskrivning:"
 
 #: catalog/templates/catalog/category_detail.html:8
 #: catalog/templates/catalog/thread_detail.html:10
-#: catalog/templates/catalog/thread_list.html:17
+#: catalog/templates/catalog/thread_list.html:19
 msgid "Created:"
 msgstr "Skapad:"
 
@@ -92,18 +167,23 @@ msgstr "Trådar i denna kategori:"
 
 #: catalog/templates/catalog/category_detail.html:18
 #: catalog/templates/catalog/thread_detail.html:13
-#: catalog/templates/catalog/thread_list.html:11
+#: catalog/templates/catalog/thread_list.html:13
+#: catalog/templates/index.html:91 catalog/templates/index.html:142
+#: catalog/templates/index.html:194
 msgid "Pinned"
 msgstr "Fäst"
 
 #: catalog/templates/catalog/category_detail.html:19
 #: catalog/templates/catalog/thread_detail.html:14
-#: catalog/templates/catalog/thread_list.html:12
+#: catalog/templates/catalog/thread_list.html:14
+#: catalog/templates/index.html:94 catalog/templates/index.html:145
+#: catalog/templates/index.html:197
 msgid "Locked"
 msgstr "Låst"
 
 #: catalog/templates/catalog/category_detail.html:21
-#: catalog/templates/index.html:29
+#: catalog/templates/index.html:98 catalog/templates/index.html:149
+#: catalog/templates/index.html:201
 msgid "by"
 msgstr "av"
 
@@ -120,17 +200,397 @@ msgid "No threads in this category yet."
 msgstr "Inga trådar i denna kategori ännu."
 
 #: catalog/templates/catalog/category_list.html:5
+#: catalog/templates/index.html:50
 msgid "Forum Categories"
 msgstr "Forumkategorier"
 
 #: catalog/templates/catalog/category_list.html:12
-#: catalog/templates/index.html:18
+#: catalog/templates/catalog/userprofile_detail.html:25
 msgid "Threads:"
 msgstr "Trådar:"
 
 #: catalog/templates/catalog/category_list.html:17
 msgid "There are no categories in the forum."
 msgstr "Det finns inga kategorier i forumet."
+
+#: catalog/templates/catalog/help.html:6
+msgid "Help & Getting Started"
+msgstr ""
+
+#: catalog/templates/catalog/help.html:7
+msgid ""
+"Welcome to our forum! Here's everything you need to know to get started."
+msgstr ""
+
+#: catalog/templates/catalog/help.html:12
+msgid "Creating an Account"
+msgstr ""
+
+#: catalog/templates/catalog/help.html:13
+msgid "To participate in discussions, you'll need to create an account:"
+msgstr ""
+
+#: catalog/templates/catalog/help.html:15
+#: catalog/templates/catalog/help.html:64
+msgid "Click the"
+msgstr ""
+
+#: catalog/templates/catalog/help.html:15
+msgid "button in the navigation bar"
+msgstr ""
+
+#: catalog/templates/catalog/help.html:16
+msgid "Fill in your username, email, and password (Step 1)"
+msgstr ""
+
+#: catalog/templates/catalog/help.html:17
+msgid "Complete your profile information (Step 2) - or skip it for later"
+msgstr ""
+
+#: catalog/templates/catalog/help.html:18
+msgid "You're ready to start posting!"
+msgstr ""
+
+#: catalog/templates/catalog/help.html:20
+msgid ""
+"Note: Usernames and email addresses must be unique. If you skip Step 2, you "
+"can complete your profile anytime from your profile page."
+msgstr ""
+
+#: catalog/templates/catalog/help.html:24
+msgid "Browsing the Forum"
+msgstr ""
+
+#: catalog/templates/catalog/help.html:26
+#, fuzzy
+#| msgid "There are no threads in the forum."
+msgid "See recent threads and forum statistics"
+msgstr "Det finns inga trådar i forumet."
+
+#: catalog/templates/catalog/help.html:27
+msgid "Browse all discussion categories"
+msgstr ""
+
+#: catalog/templates/catalog/help.html:28
+msgid "View all discussion threads across categories"
+msgstr ""
+
+#: catalog/templates/catalog/help.html:29
+msgid "Use the search bar in the header to find specific threads or topics"
+msgstr ""
+
+#: catalog/templates/catalog/help.html:34
+msgid "Creating Posts"
+msgstr ""
+
+#: catalog/templates/catalog/help.html:35
+msgid "To create a new post in a thread:"
+msgstr ""
+
+#: catalog/templates/catalog/help.html:37
+msgid "Navigate to the thread you want to post in"
+msgstr ""
+
+#: catalog/templates/catalog/help.html:38
+#: catalog/templates/catalog/help.html:40
+msgid "Click"
+msgstr ""
+
+#: catalog/templates/catalog/help.html:38
+msgid "Create New Post"
+msgstr ""
+
+#: catalog/templates/catalog/help.html:39
+msgid "Select the thread and write your content"
+msgstr ""
+
+#: catalog/templates/catalog/help.html:40
+msgid "Save"
+msgstr ""
+
+#: catalog/templates/catalog/help.html:40
+msgid "to publish your post"
+msgstr ""
+
+#: catalog/templates/catalog/help.html:42
+msgid "You can view all your posts by clicking"
+msgstr ""
+
+#: catalog/templates/catalog/help.html:42
+msgid "in the navigation menu."
+msgstr ""
+
+#: catalog/templates/catalog/help.html:46
+msgid "Managing Your Posts"
+msgstr ""
+
+#: catalog/templates/catalog/help.html:47
+msgid "You have full control over your posts:"
+msgstr ""
+
+#: catalog/templates/catalog/help.html:49
+msgid "Edit"
+msgstr ""
+
+#: catalog/templates/catalog/help.html:49
+msgid "Click the edit button on any of your posts to modify the content"
+msgstr ""
+
+#: catalog/templates/catalog/help.html:50
+msgid "Delete"
+msgstr ""
+
+#: catalog/templates/catalog/help.html:50
+msgid ""
+"Remove individual posts or bulk delete multiple posts at once from the My "
+"Posts page"
+msgstr ""
+
+#: catalog/templates/catalog/help.html:51
+msgid "Edited Posts"
+msgstr ""
+
+#: catalog/templates/catalog/help.html:51
+msgid "Posts that have been edited will show an '(edited)' label"
+msgstr ""
+
+#: catalog/templates/catalog/help.html:56
+#, fuzzy
+#| msgid "User Profile:"
+msgid "Your Profile"
+msgstr "Användarprofil:"
+
+#: catalog/templates/catalog/help.html:57
+msgid ""
+"Click your username in the navigation to view your profile. From there you "
+"can:"
+msgstr ""
+
+#: catalog/templates/catalog/help.html:59
+msgid "See your post and thread counts"
+msgstr ""
+
+#: catalog/templates/catalog/help.html:60
+msgid "View when you joined"
+msgstr ""
+
+#: catalog/templates/catalog/help.html:61
+msgid "Edit your profile information (bio, location, website, avatar)"
+msgstr ""
+
+#: catalog/templates/catalog/help.html:62
+msgid "View all your posts and threads"
+msgstr ""
+
+#: catalog/templates/catalog/help.html:64
+#: catalog/templates/catalog/userprofile_detail.html:9
+#: catalog/templates/catalog/userprofile_form.html:9
+#, fuzzy
+#| msgid "Edit profile:"
+msgid "Edit Profile"
+msgstr "Redigera profil:"
+
+#: catalog/templates/catalog/help.html:64
+msgid "button to update your information."
+msgstr ""
+
+#: catalog/templates/catalog/help.html:68
+msgid "Dark Mode"
+msgstr ""
+
+#: catalog/templates/catalog/help.html:69
+msgid ""
+"Toggle between light and dark themes by clicking the sun/moon icon next to "
+"the Forum logo in the header. Your preference is saved automatically."
+msgstr ""
+
+#: catalog/templates/catalog/help.html:73
+msgid "Language Selection"
+msgstr ""
+
+#: catalog/templates/catalog/help.html:74
+msgid ""
+"Change the site language using the dropdown in the top-left corner of the "
+"page. Available languages will be shown in the selector."
+msgstr ""
+
+#: catalog/templates/catalog/help.html:78
+#, fuzzy
+#| msgid "Forum Categories"
+msgid "Forum Features"
+msgstr "Forumkategorier"
+
+#: catalog/templates/catalog/help.html:81 catalog/templates/index.html:17
+#: templates/404.html:114
+#, fuzzy
+#| msgid "Threads:"
+msgid "Threads"
+msgstr "Trådar:"
+
+#: catalog/templates/catalog/help.html:85
+msgid "Threads can be pinned to stay at the top of lists"
+msgstr ""
+
+#: catalog/templates/catalog/help.html:86
+msgid "Locked threads prevent new posts from being added"
+msgstr ""
+
+#: catalog/templates/catalog/help.html:87
+msgid "View counts show how many times a thread has been viewed"
+msgstr ""
+
+#: catalog/templates/catalog/help.html:94 catalog/templates/index.html:13
+#: templates/404.html:112
+#, fuzzy
+#| msgid "Categories:"
+msgid "Categories"
+msgstr "Kategorier:"
+
+#: catalog/templates/catalog/help.html:98
+#, fuzzy
+#| msgid "Threads in this category:"
+msgid "Each thread belongs to a category"
+msgstr "Trådar i denna kategori:"
+
+#: catalog/templates/catalog/help.html:99
+msgid "Click on a category to see all threads within it"
+msgstr ""
+
+#: catalog/templates/catalog/help.html:100
+msgid "Categories help organize discussions by topic"
+msgstr ""
+
+#: catalog/templates/catalog/help.html:111
+msgid "Search by thread title or post content"
+msgstr ""
+
+#: catalog/templates/catalog/help.html:112
+msgid "Filter results by category"
+msgstr ""
+
+#: catalog/templates/catalog/help.html:113
+msgid "Results show matching threads with their metadata"
+msgstr ""
+
+#: catalog/templates/catalog/help.html:120
+msgid "Community Guidelines"
+msgstr ""
+
+#: catalog/templates/catalog/help.html:123
+msgid "Be respectful to other forum members"
+msgstr ""
+
+#: catalog/templates/catalog/help.html:124
+msgid "Stay on topic within threads"
+msgstr ""
+
+#: catalog/templates/catalog/help.html:125
+msgid "Use appropriate language and content"
+msgstr ""
+
+#: catalog/templates/catalog/help.html:126
+msgid "Don't spam or post duplicate content"
+msgstr ""
+
+#: catalog/templates/catalog/help.html:127
+msgid "Report inappropriate content to moderators"
+msgstr ""
+
+#: catalog/templates/catalog/help.html:133
+msgid "Need More Help?"
+msgstr ""
+
+#: catalog/templates/catalog/help.html:134
+msgid "If you have questions or issues:"
+msgstr ""
+
+#: catalog/templates/catalog/help.html:136
+msgid "Check if your question is already answered above"
+msgstr ""
+
+#: catalog/templates/catalog/help.html:137
+msgid "Contact the forum administrators"
+msgstr ""
+
+#: catalog/templates/catalog/help.html:139
+msgid "As a staff member, you can access the"
+msgstr ""
+
+#: catalog/templates/catalog/help.html:139
+msgid "admin panel"
+msgstr ""
+
+#: catalog/templates/catalog/help.html:139
+msgid "for additional management features"
+msgstr ""
+
+#: catalog/templates/catalog/help.html:145
+msgid "Ready to Get Started?"
+msgstr ""
+
+#: catalog/templates/catalog/help.html:147
+msgid "You're all set! Start exploring threads or create your first post."
+msgstr ""
+
+#: catalog/templates/catalog/help.html:149
+#, fuzzy
+#| msgid "Total Threads:"
+msgid "Browse Threads"
+msgstr "Totalt antal trådar:"
+
+#: catalog/templates/catalog/help.html:150
+msgid "Create a Post"
+msgstr ""
+
+#: catalog/templates/catalog/help.html:153
+msgid "Create an account to start participating in discussions."
+msgstr ""
+
+#: catalog/templates/catalog/help.html:155
+msgid "Sign Up Now"
+msgstr ""
+
+#: catalog/templates/catalog/moderator_base.html:14
+msgid "Dashboard"
+msgstr ""
+
+#: catalog/templates/catalog/moderator_base.html:15
+#, fuzzy
+#| msgid "Total Posts:"
+msgid "All Posts"
+msgstr "Totalt antal inlägg:"
+
+#: catalog/templates/catalog/moderator_base.html:16
+msgid "← Back to Forum"
+msgstr ""
+
+#: catalog/templates/catalog/notification_list.html:13
+msgid "Mark all as read"
+msgstr ""
+
+#: catalog/templates/catalog/notification_list.html:41
+#: catalog/templates/catalog/userprofile_detail.html:48
+#: catalog/templates/index.html:104 catalog/templates/index.html:155
+#: catalog/templates/index.html:207
+msgid "in"
+msgstr "i"
+
+#: catalog/templates/catalog/notification_list.html:48
+#, fuzzy
+#| msgid "Views:"
+msgid "View"
+msgstr "Visningar:"
+
+#: catalog/templates/catalog/notification_list.html:78
+#, fuzzy
+#| msgid "No posts yet."
+msgid "No notifications yet"
+msgstr "Inga inlägg ännu."
+
+#: catalog/templates/catalog/notification_list.html:79
+msgid ""
+"When someone posts in a thread you're participating in, you'll see it here."
+msgstr ""
 
 #: catalog/templates/catalog/search_results.html:5
 msgid "Search Results"
@@ -139,6 +599,10 @@ msgstr "Sök resultat"
 #: catalog/templates/catalog/search_results.html:12
 msgid "Search for threads..."
 msgstr "Sök efter trådar"
+
+#: catalog/templates/catalog/search_results.html:19
+msgid "All categories"
+msgstr "Alla kategorier"
 
 #: catalog/templates/catalog/search_results.html:29
 msgid "Filter"
@@ -149,12 +613,12 @@ msgid "No matching threads found."
 msgstr "Inga matchade trådar hittades"
 
 #: catalog/templates/catalog/thread_detail.html:8
-#: catalog/templates/catalog/thread_list.html:15
+#: catalog/templates/catalog/thread_list.html:17
 msgid "Category:"
 msgstr "Kategori:"
 
 #: catalog/templates/catalog/thread_detail.html:9
-#: catalog/templates/catalog/thread_list.html:16
+#: catalog/templates/catalog/thread_list.html:18
 msgid "Author:"
 msgstr "Författare:"
 
@@ -163,152 +627,279 @@ msgid "Last Updated:"
 msgstr "Senast uppdaterad:"
 
 #: catalog/templates/catalog/thread_detail.html:12
-#: catalog/templates/catalog/thread_list.html:19
+#: catalog/templates/catalog/thread_list.html:21
 msgid "Views:"
 msgstr "Visningar:"
 
-#: catalog/templates/catalog/thread_detail.html:19
+#: catalog/templates/catalog/thread_detail.html:23
+msgid "Summarize with AI"
+msgstr ""
+
+#: catalog/templates/catalog/thread_detail.html:30
+msgid "AI Summary"
+msgstr ""
+
+#: catalog/templates/catalog/thread_detail.html:39
 msgid "Posts in this thread:"
 msgstr "Inlägg i denna tråd:"
 
-#: catalog/templates/catalog/thread_detail.html:26
+#: catalog/templates/catalog/thread_detail.html:47
+#: catalog/templates/catalog/user_list.html:18
+msgid "Send DM"
+msgstr ""
+
+#: catalog/templates/catalog/thread_detail.html:54
 msgid "edited"
 msgstr "redigerad"
 
-#: catalog/templates/catalog/thread_detail.html:34
+#: catalog/templates/catalog/thread_detail.html:62
+msgid "Like this post"
+msgstr ""
+
+#: catalog/templates/catalog/thread_detail.html:83
 msgid "No posts yet. Be the first to post!"
 msgstr "Inga inlägg ännu. Var först att posta!"
 
-#: catalog/templates/catalog/thread_list.html:5
-msgid "All Threads"
-msgstr "Alla trådar"
+#: catalog/templates/catalog/thread_detail.html:102
+msgid "Generating..."
+msgstr ""
 
-#: catalog/templates/catalog/thread_list.html:18
-#: catalog/templates/index.html:19
+#: catalog/templates/catalog/thread_form.html:5
+msgid "Create New Thread"
+msgstr ""
+
+#: catalog/templates/catalog/thread_form.html:12
+#, fuzzy
+#| msgid "Recent Threads"
+msgid "Create Thread"
+msgstr "Senaste trådar"
+
+#: catalog/templates/catalog/thread_form.html:13
+#: catalog/templates/catalog/userprofile_form.html:12
+#: catalog/templates/catalog/userprofile_form.html:53
+#: templates/registration/register_step1.html:114
+msgid "Cancel"
+msgstr "Avbryt"
+
+#: catalog/templates/catalog/thread_list.html:20
+#: catalog/templates/catalog/userprofile_detail.html:26
 msgid "Posts:"
 msgstr "Inlägg:"
 
-#: catalog/templates/catalog/thread_list.html:25
+#: catalog/templates/catalog/thread_list.html:27
 msgid "There are no threads in the forum."
 msgstr "Det finns inga trådar i forumet."
+
+#: catalog/templates/catalog/user_list.html:5
+msgid "Users"
+msgstr "Användare"
 
 #: catalog/templates/catalog/user_list.html:16
 msgid "View profile"
 msgstr "Visa profil"
 
-#: catalog/templates/catalog/user_list.html:23
+#: catalog/templates/catalog/user_list.html:30
 msgid "No users found."
 msgstr "Inga användare hittades."
 
-#: catalog/templates/catalog/userprofile_detail.html:5
-msgid "User Profile:"
-msgstr "Användarprofil:"
-
-#: catalog/templates/catalog/userprofile_detail.html:8
-msgid "edit"
-msgstr "redigera"
-
 #: catalog/templates/catalog/userprofile_detail.html:16
-msgid "Avatar"
-msgstr "Avatar"
+msgid "Send Message"
+msgstr ""
 
-#: catalog/templates/catalog/userprofile_detail.html:18
-msgid "No Avatar"
-msgstr "Ingen avatar"
-
-#: catalog/templates/catalog/userprofile_detail.html:22
+#: catalog/templates/catalog/userprofile_detail.html:29
 msgid "Bio:"
 msgstr "Biografi:"
 
-#: catalog/templates/catalog/userprofile_detail.html:23
+#: catalog/templates/catalog/userprofile_detail.html:33
 msgid "Location:"
 msgstr "Plats:"
 
-#: catalog/templates/catalog/userprofile_detail.html:25
+#: catalog/templates/catalog/userprofile_detail.html:37
 msgid "Website:"
 msgstr "Webbplats:"
 
-#: catalog/templates/catalog/userprofile_detail.html:27
-msgid "Joined:"
-msgstr "Gick med:"
-
-#: catalog/templates/catalog/userprofile_detail.html:28
-msgid "Total Posts:"
-msgstr "Totalt antal inlägg:"
-
-#: catalog/templates/catalog/userprofile_detail.html:29
-msgid "Total Threads:"
-msgstr "Totalt antal trådar:"
-
-#: catalog/templates/catalog/userprofile_detail.html:35
-msgid "Recent Threads by"
-msgstr "Senaste trådar av"
-
-#: catalog/templates/catalog/userprofile_detail.html:41
-#: catalog/templates/index.html:29
-msgid "in"
-msgstr "i"
-
-#: catalog/templates/catalog/userprofile_detail.html:47
-msgid "No threads created yet."
-msgstr "Inga trådar skapade ännu."
-
-#: catalog/templates/catalog/userprofile_detail.html:50
-msgid "Recent Posts by"
-msgstr "Senaste inlägg av"
-
-#: catalog/templates/catalog/userprofile_detail.html:55
-msgid "Post in"
-msgstr "Inlägg i"
-
-#: catalog/templates/catalog/userprofile_detail.html:61
-msgid "No posts yet."
-msgstr "Inga inlägg ännu."
-
-#: catalog/templates/catalog/userprofile_form.html:5
-msgid "Edit profile:"
-msgstr "Redigera profil:"
-
-#: catalog/templates/catalog/userprofile_form.html:10
-msgid "Save changes"
-msgstr "Spara ändringar"
-
-#: catalog/templates/catalog/userprofile_form.html:11
-msgid "Cancel"
-msgstr "Avbryt"
-
-#: catalog/templates/index.html:5
-msgid "Forum Home"
-msgstr "Forum hem"
-
-#: catalog/templates/index.html:12
-msgid "Welcome to our Forum! A place for discussions and community engagement."
+#: catalog/templates/catalog/userprofile_detail.html:40
+msgid "Member since:"
 msgstr ""
-"Välkommen till vårt forum! En plats för diskussioner och samhällsengagemang."
 
-#: catalog/templates/index.html:14
-msgid "Forum Statistics"
-msgstr "Forumstatistik"
-
-#: catalog/templates/index.html:15
-msgid "The forum has the following statistics:"
-msgstr "Forumet har följande statistik:"
-
-#: catalog/templates/index.html:17
-msgid "Categories:"
-msgstr "Kategorier:"
-
-#: catalog/templates/index.html:20
-msgid "Users:"
-msgstr "Användare:"
-
-#: catalog/templates/index.html:23
+#: catalog/templates/catalog/userprofile_detail.html:42
+#: catalog/templates/index.html:133
 msgid "Recent Threads"
 msgstr "Senaste trådar"
 
-#: catalog/templates/index.html:34
+#: catalog/templates/catalog/userprofile_detail.html:54
+msgid "No threads created yet."
+msgstr "Inga trådar skapade ännu."
+
+#: catalog/templates/catalog/userprofile_detail.html:57
+#, fuzzy
+#| msgid "Recent Posts by"
+msgid "Recent Posts"
+msgstr "Senaste inlägg av"
+
+#: catalog/templates/catalog/userprofile_detail.html:68
+msgid "No posts yet."
+msgstr "Inga inlägg ännu."
+
+#: catalog/templates/catalog/userprofile_form.html:10
+msgid "Update your profile information"
+msgstr ""
+
+#: catalog/templates/catalog/userprofile_form.html:22
+msgid "Member since"
+msgstr ""
+
+#: catalog/templates/catalog/userprofile_form.html:51
+#, fuzzy
+#| msgid "Save changes"
+msgid "Save Changes"
+msgstr "Spara ändringar"
+
+#: catalog/templates/catalog/userprofile_form.html:59
+msgid "Fields marked with * are required"
+msgstr ""
+
+#: catalog/templates/index.html:7
+msgid "Welcome to the Forum"
+msgstr ""
+
+#: catalog/templates/index.html:8
+#, fuzzy
+#| msgid ""
+#| "Welcome to our Forum! A place for discussions and community engagement."
+msgid "A place for discussions and community engagement."
+msgstr ""
+"Välkommen till vårt forum! En plats för diskussioner och samhällsengagemang."
+
+#: catalog/templates/index.html:21
+#, fuzzy
+#| msgid "Posts:"
+msgid "Posts"
+msgstr "Inlägg:"
+
+#: catalog/templates/index.html:25
+msgid "Members"
+msgstr ""
+
+#: catalog/templates/index.html:35
+#, fuzzy
+#| msgid "Total Threads:"
+msgid "Start New Thread"
+msgstr "Totalt antal trådar:"
+
+#: catalog/templates/index.html:37
+#, fuzzy
+#| msgid "Forum Categories"
+msgid "Browse Categories"
+msgstr "Forumkategorier"
+
+#: catalog/templates/index.html:41
+msgid "Sign In to Join the Discussion"
+msgstr ""
+
+#: catalog/templates/index.html:42
+msgid "Register"
+msgstr ""
+
+#: catalog/templates/index.html:51
+#, fuzzy
+#| msgid "View profile"
+msgid "View All"
+msgstr "Visa profil"
+
+#: catalog/templates/index.html:67
+#, fuzzy
+#| msgid "Threads:"
+msgid "threads"
+msgstr "Trådar:"
+
+#: catalog/templates/index.html:74
+#, fuzzy
+#| msgid "All categories"
+msgid "No categories yet."
+msgstr "Alla kategorier"
+
+#: catalog/templates/index.html:81
+#, fuzzy
+#| msgid "Total Threads:"
+msgid "Most Active Threads"
+msgstr "Totalt antal trådar:"
+
+#: catalog/templates/index.html:82
+#, fuzzy
+#| msgid "All Threads"
+msgid "View All Threads"
+msgstr "Alla trådar"
+
+#: catalog/templates/index.html:102 catalog/templates/index.html:153
+#: catalog/templates/index.html:205
+msgid "Unknown"
+msgstr ""
+
+#: catalog/templates/index.html:126 catalog/templates/index.html:178
 msgid "No threads yet. Be the first to start a discussion!"
 msgstr "Inga trådar ännu. Var först att starta en diskussion!"
+
+#: catalog/templates/index.html:185
+#, fuzzy
+#| msgid "Total Threads:"
+msgid "Most Viewed Threads"
+msgstr "Totalt antal trådar:"
+
+#: catalog/templates/index.html:229
+#, fuzzy
+#| msgid "No threads created yet."
+msgid "No threads yet."
+msgstr "Inga trådar skapade ännu."
+
+#: chat/templates/chat/conversation_list.html:29
+msgid "You:"
+msgstr ""
+
+#: chat/templates/chat/conversation_list.html:33
+#, fuzzy
+#| msgid "No posts yet."
+msgid "No messages yet"
+msgstr "Inga inlägg ännu."
+
+#: chat/templates/chat/conversation_list.html:48
+#, fuzzy
+#| msgid "No posts yet."
+msgid "No conversations yet"
+msgstr "Inga inlägg ännu."
+
+#: chat/templates/chat/conversation_list.html:49
+msgid ""
+"Start a conversation by clicking the DM button on a user's profile or post"
+msgstr ""
+
+#: chat/templates/chat/room.html:4
+msgid "Chat with"
+msgstr ""
+
+#: chat/templates/chat/room.html:11
+msgid "Back to messages"
+msgstr ""
+
+#: chat/templates/chat/room.html:19
+msgid "Connecting..."
+msgstr ""
+
+#: chat/templates/chat/room.html:28
+msgid "Type a message..."
+msgstr ""
+
+#: chat/templates/chat/room.html:59
+msgid "Connected"
+msgstr ""
+
+#: chat/templates/chat/room.html:82
+msgid "Disconnected"
+msgstr ""
+
+#: chat/templates/chat/room.html:91
+msgid "Reconnecting..."
+msgstr ""
 
 #: locallibrary/settings.py:18
 msgid "English"
@@ -318,19 +909,23 @@ msgstr "Engelska"
 msgid "Swedish"
 msgstr "Svenska"
 
-#: templates/registration/logged_out.html:5
-msgid "Logged out!"
-msgstr "Utloggad!"
+#: templates/404.html:8
+msgid "Page Not Found"
+msgstr ""
 
-#: templates/registration/logged_out.html:6
-msgid "Click here to login again."
-msgstr "Klicka här för att logga in igen."
+#: templates/404.html:106
+msgid "PAGE NOT FOUND"
+msgstr ""
 
-#: templates/registration/login.html:7
+#: templates/404.html:108
+msgid "Oops! The page you're looking for doesn't exist."
+msgstr ""
+
+#: templates/registration/login.html:11
 msgid "Your username and password didn't match. Please try again."
 msgstr "Ditt användarnamn och lösenord matchade inte. Försök igen."
 
-#: templates/registration/login.html:12
+#: templates/registration/login.html:18
 msgid ""
 "Your account doesn't have access to this page. To proceed, please login with "
 "an account that has access."
@@ -338,13 +933,118 @@ msgstr ""
 "Ditt konto har inte tillgång till denna sida. För att fortsätta, logga in "
 "med ett konto som har tillgång."
 
-#: templates/registration/login.html:14
+#: templates/registration/login.html:22
 msgid "Please login to see this page."
 msgstr "Logga in för att se denna sida."
 
-#: templates/registration/login.html:30
-msgid "login"
-msgstr "logga in"
+#: templates/registration/login.html:54
+msgid "Don't have an account?"
+msgstr ""
+
+#: templates/registration/login.html:54
+msgid "Create one here"
+msgstr ""
+
+#: templates/registration/register_step1.html:6
+msgid "Create Account - Step 1 of 2"
+msgstr ""
+
+#: templates/registration/register_step1.html:7
+msgid "First, let's set up your account credentials."
+msgstr ""
+
+#: templates/registration/register_step1.html:113
+msgid "Next: Profile Details"
+msgstr ""
+
+#: templates/registration/register_step1.html:118
+msgid "Already have an account?"
+msgstr ""
+
+#: templates/registration/register_step1.html:118
+msgid "Log in here"
+msgstr ""
+
+#: templates/registration/register_step2.html:6
+msgid "Create Account - Step 2 of 2"
+msgstr ""
+
+#: templates/registration/register_step2.html:7
+msgid "Now let's set up your profile."
+msgstr ""
+
+#: templates/registration/register_step2.html:79
+msgid "Complete Registration"
+msgstr ""
+
+#: templates/registration/register_step2.html:80
+msgid "Skip for Now"
+msgstr ""
+
+#: templates/registration/register_step2.html:84
+msgid ""
+"All fields on this page are optional. You can complete your profile later "
+"from your profile page."
+msgstr ""
+
+#: templates/registration/register_step2.html:107
+msgid "Registration Progress"
+msgstr ""
+
+#: templates/registration/register_step2.html:111
+#, fuzzy
+#| msgid "Created:"
+msgid "Account Created"
+msgstr "Skapad:"
+
+#: templates/registration/register_step2.html:116
+msgid "Profile Setup"
+msgstr ""
+
+#~ msgid "All threads"
+#~ msgstr "Alla trådar"
+
+#~ msgid "Admin"
+#~ msgstr "Administratör"
+
+#~ msgid "edit"
+#~ msgstr "redigera"
+
+#~ msgid "Avatar"
+#~ msgstr "Avatar"
+
+#~ msgid "No Avatar"
+#~ msgstr "Ingen avatar"
+
+#~ msgid "Joined:"
+#~ msgstr "Gick med:"
+
+#~ msgid "Recent Threads by"
+#~ msgstr "Senaste trådar av"
+
+#~ msgid "Post in"
+#~ msgstr "Inlägg i"
+
+#~ msgid "Forum Home"
+#~ msgstr "Forum hem"
+
+#~ msgid "Forum Statistics"
+#~ msgstr "Forumstatistik"
+
+#~ msgid "The forum has the following statistics:"
+#~ msgstr "Forumet har följande statistik:"
+
+#~ msgid "Users:"
+#~ msgstr "Användare:"
+
+#~ msgid "Logged out!"
+#~ msgstr "Utloggad!"
+
+#~ msgid "Click here to login again."
+#~ msgstr "Klicka här för att logga in igen."
+
+#~ msgid "login"
+#~ msgstr "logga in"
 
 #~ msgid "Lost password?"
 #~ msgstr "Glömt lösenord?"
