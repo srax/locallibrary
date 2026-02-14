@@ -1,0 +1,60 @@
+name: locallibrary
+region: nyc
+
+services:
+  - name: web
+    environment_slug: python
+    github:
+      repo: krutisbs/locallibrary
+      branch: main
+      deploy_on_push: true
+    
+    build_command: |
+      python -m pip install --upgrade pip
+      pip install -r requirements.txt
+      python manage.py collectstatic --no-input
+    
+    run_command: daphne -b 0.0.0.0 -p ${PORT} locallibrary.asgi:application
+    
+    http_port: 8080
+    
+    instance_count: 1
+    instance_size_slug: basic-xxs
+    
+    envs:
+      - key: DJANGO_ENV
+        value: production
+      - key: SECRET_KEY
+        type: SECRET
+        scope: RUN_TIME
+      - key: DEBUG
+        value: "False"
+      - key: DATABASE_URL
+        type: SECRET
+        scope: RUN_AND_BUILD_TIME
+      - key: ALLOWED_HOSTS
+        value: "${APP_DOMAIN}"
+        scope: RUN_TIME
+    
+    health_check:
+      http_path: /
+
+databases:
+  - name: db
+    engine: PG
+    version: "16"
+    production: false
+    cluster_name: locallibrary-db
+
+jobs:
+  - name: migrate
+    kind: PRE_DEPLOY
+    github:
+      repo: krutisbs/locallibrary
+      branch: main
+    environment_slug: python
+    run_command: python manage.py migrate --no-input
+    envs:
+      - key: DATABASE_URL
+        type: SECRET
+        scope: RUN_AND_BUILD_TIME

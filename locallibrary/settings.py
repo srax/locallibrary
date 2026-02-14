@@ -42,12 +42,19 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-g0sm2%+-kjd*)2t1$k9db
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = ['wearethebest.up.railway.app', '*']  # Railway will provide the domain via environment
+# DigitalOcean App Platform domain support
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    '.ondigitalocean.app',  # DigitalOcean App Platform domains
+    os.environ.get('ALLOWED_HOSTS', '').split(',') if os.environ.get('ALLOWED_HOSTS') else [],
+]
+# Flatten the list
+ALLOWED_HOSTS = [host.strip() for sublist in ALLOWED_HOSTS for host in (sublist if isinstance(sublist, list) else [sublist]) if host]
 
 # CSRF Settings for production
 CSRF_TRUSTED_ORIGINS = [
-    'https://wearethebest.up.railway.app',
-    'https://*.up.railway.app',  # Allow all Railway preview deployments
+    'https://*.ondigitalocean.app',  # DigitalOcean App Platform domains
 ]
 
 

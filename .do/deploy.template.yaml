@@ -1,0 +1,28 @@
+# DigitalOcean App Platform Deployment Template
+#
+# This template provides a simplified configuration for deploying to DigitalOcean.
+# You can use this with the DigitalOcean CLI or API.
+
+name: locallibrary
+region: nyc  # Choose: nyc, sfo, ams, sgp, lon, fra, tor, blr
+
+services:
+  - name: web
+    environment_slug: python
+    instance_count: 1
+    instance_size_slug: basic-xxs  # Options: basic-xxs, basic-xs, basic-s, basic-m, professional-xs, etc.
+    
+    envs:
+      - key: SECRET_KEY
+        value: YOUR_SECRET_KEY_HERE  # Generate a new secret key
+        type: SECRET
+      - key: DEBUG
+        value: "False"
+      - key: DJANGO_ENV
+        value: production
+
+databases:
+  - name: db
+    engine: PG  # PostgreSQL
+    version: "16"
+    production: false  # Set to true for production use
